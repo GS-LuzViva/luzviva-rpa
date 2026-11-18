@@ -12,7 +12,7 @@
 | Arquitetura: componentes | Robô LDR, app com visão computacional, pipeline de dados, assistente de IA, robô de RPA e plataforma em nuvem |
 | Fontes de dados | Cadastro ILUME (GeoSampa), SP156, Open-Meteo, medições do robô, ocorrências do app, chamados do RPA |
 | Modelos de IA | YOLO11 para luminárias, LLM local com RAG e agente, classificador TinyML no ESP32 |
-| URL do MVP e repositório | (preencher quando subir) |
+| URL do MVP e repositório | MVP: http://52.67.217.30 · Repositório: https://github.com/GS-LuzViva/RoboticProcessAutomation |
 | Indicadores de impacto | % de falhas achadas antes de relato; tempo até o reparo; horas-luminária no escuro por noite |
 | ODS | 11 (meta 11.7, espaços públicos seguros), 9 (infraestrutura funcionando), 10 (periferia espera mais pelo reparo?) |
 
@@ -26,7 +26,7 @@
 | Guilherme Monteiro Espim | RM99499 | Maker Lab + BI & Startup (pitch) |
 | Guilherme Nobre Bernardo | RM98604 | Big Data |
 
-Endereço da API: (preencher quando o Matheus publicar)
+Endereço da API publicada: http://52.67.217.30 (documentação em http://52.67.217.30/docs)
 
 ## O que é este app
 

@@ -44,15 +44,15 @@ docker compose logs -f rpa                 # execuções do robô
    ao do app, `LUZVIVA_RPA_INTERVALO=3600`.
    Alternativa: um *Cron Job* com o comando `python -m luzviva_rpa` e agenda `0 * * * *`.
 
-## 4. Opção C: Azure (a nuvem usada na disciplina de DevOps)
+## 4. Opção C: AWS (a nuvem usada na disciplina de DevOps)
 
-- **App Service for Containers** com a imagem de `app/` (porta 8000) e um compartilhamento do
-  Azure Files montado em `/srv/estado`.
-- **Container Apps Job** agendado (`0 * * * *`) com a imagem da raiz e o comando
-  `python -m luzviva_rpa`, ou um Container App com o `CMD` padrão (laço).
-- Segredos (`LUZVIVA_API_TOKEN`) no **Key Vault**, referenciados nas variáveis de ambiente.
-- A infraestrutura como código (Terraform), o pipeline com Gitleaks/Semgrep/Trivy e o
-  monitoramento (`/metrics`) são da entrega de Secure DevOps do Matheus.
+- O MVP do grupo está publicado em **http://52.67.217.30**, numa EC2 na região São Paulo
+  (`sa-east-1`), criada por Terraform. O código, o Terraform e o pipeline com Gitleaks, Semgrep e
+  Trivy ficam no repositório da entrega de Secure DevOps:
+  https://github.com/MatheusCosta616/luzviva-app
+- Para o robô usar esse MVP: `LUZVIVA_API_URL=http://52.67.217.30`. Não precisa de token.
+- O workflow `.github/workflows/rpa-agendado.yml` deste repositório roda o robô de hora em hora
+  contra esse endereço e guarda os logs como artefato.
 
 ## 5. Depois de publicar
 

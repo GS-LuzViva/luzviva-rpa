@@ -1,0 +1,41 @@
+# Roda o robô de hora em hora contra o MVP publicado na AWS e guarda os logs como evidência.
+# Também pode ser disparado à mão em Actions > rpa-agendado > Run workflow.
+name: rpa-agendado
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # de hora em hora (UTC), fora do minuto 0 para evitar fila
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rpa-agendado
+  cancel-in-progress: false
+
+jobs:
+  executar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LUZVIVA_API_URL: ${{ vars.LUZVIVA_API_URL || 'http://52.67.217.30' }}
+      LUZVIVA_RPA_DIR_LOGS: logs-execucao
+      LUZVIVA_RPA_DIR_SAIDA: saida
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Executar o robô contra o MVP publicado
+        run: python -m luzviva_rpa
+      - name: Guardar logs e resumo da execução
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: execucao-rpa-${{ github.run_number }}
+          path: |
+            logs-execucao/
+            saida/
+          retention-days: 30

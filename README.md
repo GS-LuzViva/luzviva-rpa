@@ -22,7 +22,7 @@ integra (site + API do LuzViva), prontos para rodar juntos com um comando.
 | Arquitetura: componentes | Robô LDR, app com visão computacional, pipeline de dados, assistente de IA, robô de RPA e plataforma em nuvem |
 | Fontes de dados | Cadastro ILUME (GeoSampa), SP156, Open-Meteo, medições do robô, ocorrências do app, chamados do RPA |
 | Modelos de IA | YOLO11 para luminárias, LLM local com RAG e agente, classificador TinyML no ESP32 |
-| URL do MVP e repositório | MVP: (preencher quando publicar) · Repositório: https://github.com/GS-LuzViva/RoboticProcessAutomation |
+| URL do MVP e repositório | MVP: http://52.67.217.30 · Repositório: https://github.com/GS-LuzViva/RoboticProcessAutomation |
 | Indicadores de impacto | % de falhas achadas antes de relato; tempo até o reparo; horas-luminária no escuro por noite |
 | ODS | 11 (meta 11.7, espaços públicos seguros), 9 (infraestrutura funcionando), 10 (periferia espera mais pelo reparo?) |
 
@@ -255,6 +255,13 @@ Linux (cron, `crontab -e`):
 0 * * * * cd /opt/RoboticProcessAutomation && LUZVIVA_API_URL=https://url-do-app .venv/bin/python -m luzviva_rpa >/dev/null 2>&1
 ```
 
+### Agendamento no GitHub Actions (contra o MVP publicado)
+
+O workflow `.github/workflows/rpa-agendado.yml` roda o robô de hora em hora contra o MVP
+publicado (`LUZVIVA_API_URL`, padrão `http://52.67.217.30`) e guarda o log e o resumo de cada
+execução como artefato do run, por 30 dias. Para rodar na hora: Actions > rpa-agendado > Run workflow.
+O workflow `ci.yml` roda os testes (`pytest`) a cada push e pull request.
+
 ### Sem o app no ar: API simulada
 
 `tests/api_simulada.py` sobe, só com a biblioteca padrão, uma API com as mesmas rotas e regras e
@@ -346,7 +353,7 @@ manual marcadas como estimativas ([docs/roi.md](docs/roi.md), [planilha](docs/ro
 
 ## Publicação
 
-Passo a passo para colocar site, API e robô no ar juntos (VM com Docker, Render ou Azure) em
+Passo a passo para colocar site, API e robô no ar juntos (VM com Docker, Render ou AWS, onde o MVP do grupo está publicado) em
 [docs/publicacao.md](docs/publicacao.md).
 
 ## Documentação e links
@@ -361,4 +368,6 @@ Passo a passo para colocar site, API e robô no ar juntos (VM com Docker, Render
 | [app/docs/especificacao_api.md](app/docs/especificacao_api.md) | Rotas, regras e contratos da API |
 
 - Repositório de dados do grupo: https://github.com/GN0Ber/gs-citizentech-dados
-- MVP publicado: (preencher)
+- MVP publicado: http://52.67.217.30 (AWS, região São Paulo). É a versão do app publicada pela
+  entrega de Secure DevOps (repositório https://github.com/MatheusCosta616/luzviva-app), com o
+  mesmo contrato de API que o robô consome.
