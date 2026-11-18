@@ -302,10 +302,16 @@ Saída da última execução da suíte do robô: [tests/evidencias/pytest_saida.
 | [`logs/exemplo_execucao_sucesso.log`](logs/exemplo_execucao_sucesso.log) | Duas execuções reais: a segunda não abre nada (idempotência) |
 | [`logs/exemplo_falha_api.log`](logs/exemplo_falha_api.log) | API desligada: 4 tentativas por fase, erro registrado e resumo gravado |
 | [`assets/`](assets/) | Resumos e escalonamentos dessas execuções |
+| [`logs/exemplo_execucao_aws.log`](logs/exemplo_execucao_aws.log) | Execução contra o MVP publicado na AWS pelo GitHub Actions: 22 lidos, 10 abertos, 7 monitorar, 5 duplicados; a segunda abriu zero |
+| [`assets/aws-site-chamados.jpg`](assets/aws-site-chamados.jpg) | Aba Chamados do site publicado com os chamados abertos pelo robô às 22:20 |
+| [`assets/github-actions-log-aws.jpg`](assets/github-actions-log-aws.jpg) · [`assets/github-actions-execucoes.jpg`](assets/github-actions-execucoes.jpg) | Log e execuções do workflow `rpa-agendado` |
 
 **Integração com o MVP comprovada:** contra a API real do app, a primeira execução leu 134 itens
 da fila e abriu 88 chamados em 4,4 s; a segunda abriu zero (111 duplicados). Os chamados aparecem
 na tela Chamados do site e voltam ao pipeline de dados no arquivo do dia `chamados_rpa`.
+
+Contra o MVP publicado na AWS (http://52.67.217.30), em 17/11/2026, o robô leu 22 itens e abriu
+10 chamados; os outros 5 itens acima do corte já tinham chamado. A segunda execução abriu zero.
 
 ## Exceções e recuperação
 

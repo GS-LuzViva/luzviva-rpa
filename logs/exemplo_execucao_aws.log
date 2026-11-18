@@ -1,0 +1,34 @@
+# Execução real contra o MVP publicado na AWS (http://52.67.217.30)
+# GitHub Actions, workflow rpa-agendado, run 44214993895 (1ª execução)
+2026-11-17 22:20:15 | INFO    | API=http://52.67.217.30 token=não definido
+2026-11-17 22:20:15 | INFO    | início da execução
+2026-11-17 22:20:15 | INFO    | fila lida: 22 itens
+2026-11-17 22:20:15 | INFO    | duplicado placa=IP0730284 prioridade=98 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-17 22:20:15 | INFO    | duplicado placa=IP0726411 prioridade=98 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-17 22:20:15 | INFO    | duplicado placa=IP0782480 prioridade=98 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-17 22:20:15 | INFO    | duplicado placa=IP0749965 prioridade=87 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-17 22:20:15 | INFO    | duplicado placa=IP0727382 prioridade=85 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-17 22:20:15 | INFO    | chamado aberto id=CH-20261117-IP0719625 placa=IP0719625 prioridade=79 equipe=EQUIPE-OESTE
+2026-11-17 22:20:16 | INFO    | chamado aberto id=CH-20261117-IP0768272 placa=IP0768272 prioridade=78 equipe=EQUIPE-OESTE
+2026-11-17 22:20:16 | INFO    | chamado aberto id=CH-20261117-IP0780566 placa=IP0780566 prioridade=77 equipe=EQUIPE-OESTE
+2026-11-17 22:20:16 | INFO    | chamado aberto id=CH-20261117-IP0713011 placa=IP0713011 prioridade=72 equipe=EQUIPE-SUL
+2026-11-17 22:20:16 | INFO    | chamado aberto id=CH-20261117-IP0780525 placa=IP0780525 prioridade=71 equipe=EQUIPE-CENTRO
+2026-11-17 22:20:16 | INFO    | chamado aberto id=CH-20261117-IP0769000 placa=IP0769000 prioridade=62 equipe=EQUIPE-OESTE
+2026-11-17 22:20:17 | INFO    | chamado aberto id=CH-20261117-IP0762978 placa=IP0762978 prioridade=61 equipe=EQUIPE-SUL
+2026-11-17 22:20:17 | INFO    | chamado aberto id=CH-20261117-IP0775329 placa=IP0775329 prioridade=60 equipe=EQUIPE-CENTRO
+2026-11-17 22:20:17 | INFO    | chamado aberto id=CH-20261117-IP0724758 placa=IP0724758 prioridade=50 equipe=EQUIPE-SUL
+2026-11-17 22:20:17 | INFO    | chamado aberto id=CH-20261117-IP0721037 placa=IP0721037 prioridade=50 equipe=EQUIPE-SUL
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0725613 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0724514 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0777524 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0786812 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0794630 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0776404 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | monitorar placa=IP0760993 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-17 22:20:17 | INFO    | acompanhamento: 15 chamados abertos ou em atendimento
+2026-11-17 22:20:17 | INFO    | resumo: lidos=22 abertos=10 monitorar=7 duplicados=5 invalidos=0 em_atendimento=0 escalados=0 concluidos=0 falhas=0 duracao_s=2.787
+
+# 2ª execução, run 44215767991: nenhum chamado em dobro
+2026-11-17 22:26:10 | INFO    | fila lida: 22 itens
+2026-11-17 22:26:11 | INFO    | acompanhamento: 15 chamados abertos ou em atendimento
+2026-11-17 22:26:11 | INFO    | resumo: lidos=22 abertos=0 monitorar=7 duplicados=15 invalidos=0 em_atendimento=0 escalados=0 concluidos=0 falhas=0 duracao_s=0.926
