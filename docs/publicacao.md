@@ -21,8 +21,8 @@ O robô só começa quando o `/health` da API responde. Os dois usam o mesmo `LU
 Serve para Azure VM, AWS EC2, Oracle Cloud Free Tier ou qualquer VPS com Linux.
 
 ```bash
-git clone https://github.com/GS-LuzViva/RoboticProcessAutomation.git
-cd RoboticProcessAutomation
+git clone https://github.com/GS-LuzViva/luzviva-rpa.git
+cd luzviva-rpa
 cp .env.example .env && nano .env          # LUZVIVA_API_TOKEN, LUZVIVA_RPA_INTERVALO
 docker compose up -d --build
 docker compose ps                          # app: healthy, rpa: running
@@ -49,7 +49,7 @@ docker compose logs -f rpa                 # execuções do robô
 - O MVP do grupo está publicado em **http://52.67.217.30**, numa EC2 na região São Paulo
   (`sa-east-1`), criada por Terraform. O código, o Terraform e o pipeline com Gitleaks, Semgrep e
   Trivy ficam no repositório da entrega de Secure DevOps:
-  https://github.com/MatheusCosta616/luzviva-app
+  https://github.com/GS-LuzViva/luzviva-app
 - Para o robô usar esse MVP: `LUZVIVA_API_URL=http://52.67.217.30`. Não precisa de token.
 - O workflow `.github/workflows/rpa-agendado.yml` deste repositório roda o robô de hora em hora
   contra esse endereço e guarda os logs como artefato.

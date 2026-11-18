@@ -1,44 +1,28 @@
-# Roteiro do vídeo de RPA (até 3 minutos)
+# Roteiro do vídeo de RPA (2min52s)
 
-Gravação de tela com narração. Publicar no YouTube como não listado e colocar o link no README e no PDF.
-Antes de gravar: terminal limpo, fonte grande, `tests/api_simulada.py` (ou o app real) no ar, pasta
-`saida/` vazia, site do LuzViva aberto na tela de chamados.
+Vídeo no YouTube: (preencher com o link não listado)
 
-## 0:00 a 0:30 · Problema e papel da automação
+O vídeo tem 8 cenas com tempo fixo e é dublado por cima. Fala tranquila, uns 2,5 palavras por
+segundo; se a fala passar do tempo da cena, corte uma frase em vez de acelerar.
 
-- Tela: Ficha Técnica do README, depois o BPMN aberto no bpmn.io.
-- Fala: "A cidade só descobre que uma luminária apagou quando alguém reclama. O LuzViva monta uma
-  fila de manutenção priorizada com medição do robô e foto do cidadão. O robô de RPA faz o trabalho
-  que hoje é manual: abre um chamado por poste, cobra o prazo da equipe e só encerra quando a medição
-  confirma o reparo. Ele roda de hora em hora e fala com a API do nosso app, não com o SP156 real."
-- Mostrar no BPMN: timer de 1 hora, as duas repetições (subprocessos multi-instância) e os eventos de erro.
+| Tempo | Cena | O que aparece na tela | Fala |
+|---|---|---|---|
+| 0:00 a 0:07 | 1. Abertura | Título "LuzViva · Robô de RPA" e integrantes | Olá! Este é o LuzViva. Neste vídeo, mostramos o robô de RPA do nosso grupo. |
+| 0:07 a 0:28 | 2. Problema e papel do robô | Slide "O problema" e os 3 passos do robô | Em São Paulo, a cidade só descobre que uma luminária apagou quando alguém reclama. O LuzViva monta uma fila de manutenção por prioridade. O robô faz o trabalho que hoje é manual: abre um chamado por poste, acompanha o prazo da equipe e só encerra quando a medição confirma o conserto. |
+| 0:28 a 0:46 | 3. Processo em BPMN | `docs/processo.bpmn` com zoom nas partes citadas | Este é o processo em BPMN. Um temporizador dispara o robô de hora em hora. Ele percorre a fila item por item e depois os chamados abertos. Cada tipo de falha tem um caminho próprio, e tudo fica registrado no log. |
+| 0:46 a 1:22 | 4. Execução de ponta a ponta | Terminal do robô à esquerda, site à direita (API local, mesmo código da AWS) | Agora, o robô rodando de ponta a ponta. À esquerda está o terminal, e à direita, o site do LuzViva. Ele lê os 22 itens da fila e decide placa por placa: abre o chamado com a equipe da área, deixa em monitoramento ou marca como duplicado. Foram 15 chamados abertos, e eles aparecem no site na mesma hora. Ao rodar de novo, nada é aberto em dobro. |
+| 1:22 a 1:44 | 5. Regra de decisão | `regras.py` (`decidir_item` e `decidir_chamado`) com as linhas destacadas | A regra de decisão fica nesta função. Com prioridade 30 ou mais, luminária apagada ou com luz insuficiente e sem chamado aberto, o robô abre. Abaixo de 30, ele só monitora. No acompanhamento, um chamado aberto há um dia passa para em atendimento, e um prazo vencido é escalado para o gestor. |
+| 1:44 a 2:14 | 6. Integração com o MVP na AWS | GitHub Actions, log, site e API publicados (execução de 18/11 às 19:30) | Em produção, o robô roda no GitHub Actions de hora em hora, contra o MVP publicado na AWS. No dia 17 de novembro, ele abriu dez chamados. No dia 18, os dois que passaram de um dia foram para em atendimento. A mudança aparece no site e na API, que é de onde o painel e o pipeline de dados leem. |
+| 2:14 a 2:38 | 7. Tratamento de falhas | Terminal com a API fora do ar e depois `pytest -q` | E se a API cair? O robô tenta quatro vezes, com espera crescente, registra o erro no log e grava o resumo, sem travar. Na próxima hora, ele tenta de novo. Os 68 testes automáticos cobrem os cenários de sucesso, decisão e falha. |
+| 2:38 a 2:52 | 8. Encerramento | Slide com os resultados e os links | No fim, os chamados são abertos sem intervenção, sem duplicata e com log de auditoria, sem dados pessoais. Esse foi o robô de RPA do nosso grupo. Obrigado! |
 
-## 0:30 a 1:40 · Execução ponta a ponta
+## O que o enunciado pede no vídeo
 
-- Tela: terminal.
-  1. `set LUZVIVA_API_URL=...` e `python -m luzviva_rpa`.
-  2. Apontar no log, linha a linha: fila lida (8 itens), item inválido (prioridade 150), chamados
-     abertos com equipe por área, duplicado, monitorar, escalonamento, conclusão, resumo com a duração.
-  3. Abrir `saida/execucao_*.json` (contagens e `duracao_s`) e `saida/escalonamentos_*.json`.
-  4. Rodar de novo: "a segunda execução não abre nada, tudo vira duplicado: o robô é idempotente".
-- Tela: site do LuzViva, tela de chamados/fila, mostrando os chamados que o robô acabou de criar.
-  "Esse é o resultado consumido pelo MVP; a API também grava o arquivo do dia que volta para o
-  pipeline de dados e alimenta o tempo até o reparo no painel."
-
-## 1:40 a 2:20 · Regra de decisão
-
-- Tela: `src/luzviva_rpa/regras.py`, função `decidir_item` e `decidir_chamado`.
-- Fala: "Prioridade 30 ou mais e sem chamado aberto para a placa: abre. Abaixo de 30: monitorar.
-  Chamado aberto há um dia: em atendimento. Passou de 5 dias para apagada ou 10 para insuficiente:
-  escala para o gestor. Conclui só quando o robô de medição viu a luz normal depois da abertura."
-- Mostrar `pytest -q` passando e citar os três cenários: sucesso, decisão e falha.
-
-## 2:20 a 3:00 · Falha e segurança
-
-- Tela: terminal com `set LUZVIVA_API_URL=http://127.0.0.1:9` e `python -m luzviva_rpa --simular`.
-- Fala: "Com a API fora do ar, o robô tenta 4 vezes com espera crescente, registra o erro, não
-  derruba nada, grava o resumo e tenta de novo na próxima hora. Uma falha num item não para os
-  outros."
-- Mostrar `logs/exemplo_falha_api.log`.
-- Fechar: "O log só tem placa, id do chamado, prioridade e contagens; nenhum nome, e-mail ou
-  telefone de cidadão. Token só por variável de ambiente. Link do repositório na descrição."
+| Pedido | Cena |
+|---|---|
+| Até 3 minutos | 2min52s |
+| Problema e papel da automação | 1 e 2 |
+| Execução de ponta a ponta | 3 e 4 |
+| Regra de decisão | 5 |
+| Integração com o MVP | 6 |
+| Tratamento de falhas | 7 |

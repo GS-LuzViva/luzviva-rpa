@@ -1,0 +1,31 @@
+# Execução contra o MVP publicado na AWS (http://52.67.217.30) em 18/11/2026
+# GitHub Actions, workflow rpa-agendado, run 44412102774 (GS-LuzViva/luzviva-rpa)
+2026-11-18 19:29:59 | INFO    | API=http://52.67.217.30 token=não definido
+2026-11-18 19:29:59 | INFO    | início da execução
+2026-11-18 19:29:59 | INFO    | fila lida: 22 itens
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0730284 prioridade=98 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0726411 prioridade=98 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0782480 prioridade=98 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0749965 prioridade=87 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0727382 prioridade=85 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0719625 prioridade=79 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0768272 prioridade=78 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0780566 prioridade=77 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0713011 prioridade=72 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0780525 prioridade=71 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0769000 prioridade=62 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0762978 prioridade=61 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0775329 prioridade=60 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0724758 prioridade=50 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | duplicado placa=IP0721037 prioridade=50 motivo=placa já tem chamado aberto ou em atendimento
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0725613 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0724514 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0777524 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0786812 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0794630 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0776404 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:29:59 | INFO    | monitorar placa=IP0760993 prioridade=25 motivo=prioridade abaixo do corte 30
+2026-11-18 19:30:00 | INFO    | acompanhamento: 15 chamados abertos ou em atendimento
+2026-11-18 19:30:00 | INFO    | chamado atualizado id=CH-20261117-IP0730284 placa=IP0730284 status=em_atendimento motivo=aberto há 1 dia ou mais
+2026-11-18 19:30:00 | INFO    | chamado atualizado id=CH-20261117-IP0726411 placa=IP0726411 status=em_atendimento motivo=aberto há 1 dia ou mais
+2026-11-18 19:30:00 | INFO    | resumo: lidos=22 abertos=0 monitorar=7 duplicados=15 invalidos=0 em_atendimento=2 escalados=0 concluidos=0 falhas=0 duracao_s=0.858

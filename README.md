@@ -22,7 +22,7 @@ integra (site + API do LuzViva), prontos para rodar juntos com um comando.
 | Arquitetura: componentes | Robô LDR, app com visão computacional, pipeline de dados, assistente de IA, robô de RPA e plataforma em nuvem |
 | Fontes de dados | Cadastro ILUME (GeoSampa), SP156, Open-Meteo, medições do robô, ocorrências do app, chamados do RPA |
 | Modelos de IA | YOLO11 para luminárias, LLM local com RAG e agente, classificador TinyML no ESP32 |
-| URL do MVP e repositório | MVP: http://52.67.217.30 · Repositório: https://github.com/GS-LuzViva/RoboticProcessAutomation |
+| URL do MVP e repositório | MVP: http://52.67.217.30 · Repositório: https://github.com/GS-LuzViva/luzviva-rpa |
 | Indicadores de impacto | % de falhas achadas antes de relato; tempo até o reparo; horas-luminária no escuro por noite |
 | ODS | 11 (meta 11.7, espaços públicos seguros), 9 (infraestrutura funcionando), 10 (periferia espera mais pelo reparo?) |
 
@@ -157,7 +157,7 @@ flowchart LR
 ## Estrutura do repositório
 
 ```text
-RoboticProcessAutomation/
+luzviva-rpa/
 ├── README.md                 este arquivo
 ├── docker-compose.yml        site + API + robô rodando juntos
 ├── Dockerfile                imagem do robô
@@ -246,13 +246,13 @@ Windows (Agendador de Tarefas), com as variáveis definidas para o usuário (`se
 
 ```bat
 schtasks /Create /TN "LuzViva RPA" /SC HOURLY /MO 1 /ST 00:00 ^
-  /TR "cmd /c cd /d C:\caminho\RoboticProcessAutomation && .venv\Scripts\python.exe -m luzviva_rpa"
+  /TR "cmd /c cd /d C:\caminho\luzviva-rpa && .venv\Scripts\python.exe -m luzviva_rpa"
 ```
 
 Linux (cron, `crontab -e`):
 
 ```cron
-0 * * * * cd /opt/RoboticProcessAutomation && LUZVIVA_API_URL=https://url-do-app .venv/bin/python -m luzviva_rpa >/dev/null 2>&1
+0 * * * * cd /opt/luzviva-rpa && LUZVIVA_API_URL=https://url-do-app .venv/bin/python -m luzviva_rpa >/dev/null 2>&1
 ```
 
 ### Agendamento no GitHub Actions (contra o MVP publicado)
@@ -305,6 +305,8 @@ Saída da última execução da suíte do robô: [tests/evidencias/pytest_saida.
 | [`logs/exemplo_execucao_aws.log`](logs/exemplo_execucao_aws.log) | Execução contra o MVP publicado na AWS pelo GitHub Actions: 22 lidos, 10 abertos, 7 monitorar, 5 duplicados; a segunda abriu zero |
 | [`assets/aws-site-chamados.jpg`](assets/aws-site-chamados.jpg) | Aba Chamados do site publicado com os chamados abertos pelo robô às 22:20 |
 | [`assets/github-actions-log-aws.jpg`](assets/github-actions-log-aws.jpg) · [`assets/github-actions-execucoes.jpg`](assets/github-actions-execucoes.jpg) | Log e execuções do workflow `rpa-agendado` |
+| [`logs/exemplo_execucao_aws_18-11.log`](logs/exemplo_execucao_aws_18-11.log) | Execução de 18/11 na AWS: nada aberto em dobro e 2 chamados com mais de 1 dia passam para em atendimento |
+| [`assets/aws-site-em-atendimento.jpg`](assets/aws-site-em-atendimento.jpg) · [`assets/aws-api-em-atendimento.jpg`](assets/aws-api-em-atendimento.jpg) | Site e API publicados depois da execução de 18/11 |
 
 **Integração com o MVP comprovada:** contra a API real do app, a primeira execução leu 134 itens
 da fila e abriu 88 chamados em 4,4 s; a segunda abriu zero (111 duplicados). Os chamados aparecem
@@ -375,5 +377,5 @@ Passo a passo para colocar site, API e robô no ar juntos (VM com Docker, Render
 
 - Repositório de dados do grupo: https://github.com/GN0Ber/gs-citizentech-dados
 - MVP publicado: http://52.67.217.30 (AWS, região São Paulo). É a versão do app publicada pela
-  entrega de Secure DevOps (repositório https://github.com/MatheusCosta616/luzviva-app), com o
+  entrega de Secure DevOps (repositório https://github.com/GS-LuzViva/luzviva-app), com o
   mesmo contrato de API que o robô consome.
