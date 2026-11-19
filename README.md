@@ -356,7 +356,7 @@ manual marcadas como estimativas ([docs/roi.md](docs/roi.md), [planilha](docs/ro
   com o mascote do LuzViva (vertical 1080 × 1920). Segue um poste real (IP0537885) do momento em que
   apaga até o robô de RPA fechar o chamado, com telas reais do site e linhas reais do log do robô.
   Roteiro, especificação de direção, referências de motion e legendas em [`video/`](video/).
-- Vídeo da disciplina de RPA (até 3 min, YouTube não listado): (preencher). Roteiro em
+- Vídeo da disciplina de RPA (até 3 min, YouTube não listado): https://www.youtube.com/watch?v=vXKNnKf7z1M. Roteiro em
   [docs/roteiro_video.md](docs/roteiro_video.md).
 
 ## Publicação

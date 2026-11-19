@@ -1,6 +1,6 @@
-# Roteiro do vídeo de RPA (2min52s)
+# Roteiro do vídeo de RPA
 
-Vídeo no YouTube: (preencher com o link não listado)
+Vídeo no YouTube: https://www.youtube.com/watch?v=vXKNnKf7z1M
 
 O vídeo tem 8 cenas com tempo fixo e é dublado por cima. Fala tranquila, uns 2,5 palavras por
 segundo; se a fala passar do tempo da cena, corte uma frase em vez de acelerar.
@@ -20,7 +20,7 @@ segundo; se a fala passar do tempo da cena, corte uma frase em vez de acelerar.
 
 | Pedido | Cena |
 |---|---|
-| Até 3 minutos | 2min52s |
+| Até 3 minutos | 2min35s no vídeo publicado |
 | Problema e papel da automação | 1 e 2 |
 | Execução de ponta a ponta | 3 e 4 |
 | Regra de decisão | 5 |
