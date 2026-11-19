@@ -28,7 +28,6 @@ const PARAMETRO_BUSCA = "busca"
 const PARAMETRO_ORDEM = "ordem"
 const ESPERA_BUSCA_MS = 200
 
-/** Opções de ordem da lista do celular (na tabela, a ordem vem dos cabeçalhos). */
 const OPCOES_ORDEM = [
   { valor: "prioridade:desc", rotulo: "Maior prioridade primeiro" },
   { valor: "prioridade:asc", rotulo: "Menor prioridade primeiro" },
@@ -44,7 +43,6 @@ function textoContagem(visiveis: number, total: number): string {
   return `${formatarNumero(visiveis, 0)} de ${formatarNumero(total, 0)} ${nome} na fila`
 }
 
-/** Busca com espera (debounce) e guardada na URL (`?busca=`), sem empilhar histórico. */
 function useBusca() {
   const [parametros, setParametros] = useSearchParams()
   const naUrl = parametros.get(PARAMETRO_BUSCA) ?? ""
@@ -78,7 +76,6 @@ function useBusca() {
   return { texto, setTexto, busca, limpar }
 }
 
-/** Ordem guardada na URL (`?ordem=lux:asc`), sem empilhar histórico. A ordem padrão não aparece na URL. */
 function useOrdem() {
   const [parametros, setParametros] = useSearchParams()
   const naUrl = parametros.get(PARAMETRO_ORDEM)
@@ -117,7 +114,6 @@ export default function Fila() {
 
   const todos = consulta.data?.dados ?? SEM_ITENS
   const visiveis = useMemo(() => filtrarFila(todos, busca), [todos, busca])
-  // Numerada sobre a fila inteira: "1 de 3 no poste" não muda com a busca.
   const posicoes = useMemo(() => posicoesNoPoste(todos), [todos])
   const legenda = area ? `Fila de manutenção, área ${nomeArea(area)}` : "Fila de manutenção, todas as áreas"
 
@@ -164,7 +160,7 @@ export default function Fila() {
             variant="outline"
             onClick={() => {
               limpar()
-              document.getElementById(idBusca)?.focus() // o botão some: o foco volta para a busca
+              document.getElementById(idBusca)?.focus()
             }}
           >
             Limpar busca

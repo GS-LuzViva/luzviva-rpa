@@ -13,7 +13,7 @@ MAPA = [
     {"id_luminaria": 3, "placa": "IP0000003", "endereco": "RUA C", "subprefeitura": "CAMPO LIMPO", "lat": -23.64, "lon": -46.75,
      "ultima_medicao": None, "ultimo_lux": None, "situacao": "sem_medicao", "ocorrencias_app": 0},
 ]
-FILA = [  # fora de ordem e com um chamado "velho" do pipeline, para testar ordenação e sobreposição
+FILA = [
     {**MAPA[1], "chamado_aberto": "CH-VELHO", "status_chamado": "aberto", "confianca_visao": 0, "prioridade": 30},
     {**MAPA[0], "chamado_aberto": None, "status_chamado": None, "confianca_visao": 0.9, "prioridade": 80},
 ]

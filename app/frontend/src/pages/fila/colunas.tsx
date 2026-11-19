@@ -10,9 +10,7 @@ import type { ItemFila } from "@/lib/tipos"
 import { confiancaVisao } from "./regras"
 
 export interface MetaColuna {
-  /** Números à direita (DESIGN.md). */
   direita?: boolean
-  /** Classes extras do th e do td. */
   classe?: string
 }
 
@@ -24,10 +22,8 @@ export const recursosFila = tableFeatures({
 
 const coluna = createColumnHelper<typeof recursosFila, ItemFila>()
 
-/** Valor numérico para ordenar; ausente vai para o fim nos dois sentidos. */
 const numeroOuAusente = (valor: number | null | undefined) => (typeof valor === "number" ? valor : undefined)
 
-/** Colunas da fila. Placa e endereço são renderizados à parte (cabeçalho de linha com o botão de detalhes). */
 export const colunasFila = coluna.columns([
   coluna.accessor("prioridade", {
     header: "Prioridade",
@@ -53,7 +49,6 @@ export const colunasFila = coluna.columns([
     cell: (contexto) => {
       const lux = contexto.row.original.ultimo_lux
       if (typeof lux !== "number") return <span className="text-muted-foreground">sem medição</span>
-      // Barra e valor em colunas fixas, para as barras ficarem alinhadas entre as linhas.
       return (
         <span className="inline-flex items-center justify-end gap-2">
           <LuxMeter lux={lux} semValor />

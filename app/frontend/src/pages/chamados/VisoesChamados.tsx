@@ -15,7 +15,6 @@ export interface VisaoChamadosProps {
   itens: readonly ChamadoComPrazo[]
   legenda: string
   aoPedir: (chamado: Chamado, status: StatusChamado) => void
-  /** Id do chamado com PATCH em andamento. */
   atualizandoId: string | null
 }
 
@@ -42,22 +41,13 @@ function Prazo({ item, compacto = false }: { item: ChamadoComPrazo; compacto?: b
 }
 
 const CABECALHO = "h-11 px-2.5 py-1.5 text-xs leading-tight font-semibold whitespace-normal text-muted-foreground"
-/**
- * Coluna fixa à esquerda (chamado e placa). A da ação só fica fixa à direita a partir de 1536 px (2xl):
- * entre 1280 e 1535 px ela cobria o fim de "Situação detectada" enquanto a tabela rolava.
- */
 const FIXA_ESQUERDA = "sticky left-0 z-10 bg-card group-hover:bg-muted"
 const FIXA_DIREITA = "bg-card group-hover:bg-muted 2xl:sticky 2xl:right-0 2xl:z-10 2xl:shadow-[inset_1px_0_0_var(--border)]"
 
-/** "2026-11-09T13:18:24" → "13:18". */
 function hora(iso: string): string {
   return formatarDataHora(iso).split(" ")[1] ?? ""
 }
 
-/**
- * Tabela de chamados (>= 1024 px). Rola dentro do próprio contêiner (região com nome, alcançável pelo
- * Tab), com o chamado fixo à esquerda e, a partir de 1536 px, o controle de status fixo à direita.
- */
 export function TabelaChamados({ itens, legenda, aoPedir, atualizandoId }: VisaoChamadosProps) {
   return (
     <div className="overflow-hidden rounded-xl border bg-card">
@@ -133,7 +123,6 @@ function Dado({ rotulo, children }: { rotulo: string; children: ReactNode }) {
   )
 }
 
-/** Chamados abaixo de 1024 px (celular e tablet): um bloco empilhado por chamado, com o controle de status embaixo. */
 export function ListaChamados({ itens, legenda, aoPedir, atualizandoId }: VisaoChamadosProps) {
   return (
     <ul aria-label={legenda} className="divide-y overflow-hidden rounded-xl border bg-card">

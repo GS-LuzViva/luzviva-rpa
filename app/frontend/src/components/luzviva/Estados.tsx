@@ -6,20 +6,14 @@ import { Button } from "@/components/ui/button"
 import { mensagemDeErro } from "@/lib/api"
 
 export interface EstadoErroProps {
-  /** O erro da consulta (`query.error`); a mensagem amigável sai dele. */
   erro?: unknown
-  /** Mensagem própria (substitui a do erro). */
   mensagem?: string
-  /** Título curto. Padrão "Não foi possível carregar os dados". */
   titulo?: string
-  /** Normalmente `query.refetch`. Sem ele, o botão "Tentar de novo" não aparece. */
   aoTentarDeNovo?: () => unknown
-  /** true enquanto a nova tentativa roda (desabilita o botão). */
   tentando?: boolean
   className?: string
 }
 
-/** Erro de carregamento com o que houve, o que fazer e o botão "Tentar de novo". */
 export function EstadoErro({
   erro,
   mensagem,
@@ -53,18 +47,13 @@ export function EstadoErro({
 }
 
 export interface EstadoVazioProps {
-  /** O que está vazio, dito de forma direta ("Nenhuma luminária com falha em Pinheiros"). */
   titulo: string
-  /** O que a pessoa pode fazer agora. */
   descricao?: ReactNode
-  /** Ícone lucide (padrão Inbox). */
   icone?: LucideIcon
-  /** Ação principal (ex.: um <Button> "Ver todas as áreas"). */
   acao?: ReactNode
   className?: string
 }
 
-/** Tela ou bloco vazio que convida a agir. */
 export function EstadoVazio({ titulo, descricao, icone: Icone = Inbox, acao, className }: EstadoVazioProps) {
   return (
     <div

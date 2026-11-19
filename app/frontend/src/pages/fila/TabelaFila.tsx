@@ -13,7 +13,6 @@ import { descreverOrdem, textoPosicaoNoPoste, type PosicaoNoPoste } from "./regr
 
 export interface TabelaFilaProps {
   itens: readonly ItemFila[]
-  /** Posição de cada luminária no poste (`posicoesNoPoste`), por id da luminária. */
   posicoes: ReadonlyMap<number, PosicaoNoPoste>
   ordem: SortingState
   aoOrdenar: (ordem: Updater<SortingState>) => void
@@ -21,20 +20,14 @@ export interface TabelaFilaProps {
   legenda: string
 }
 
-/**
- * Prioridade e placa ficam presas à esquerda quando a tabela rola na horizontal (tablet): a pessoa
- * continua vendo qual poste é e quanto ele é urgente. A largura fixa da prioridade (7rem) é o
- * deslocamento da placa; a sombra marca a borda do que fica preso.
- */
 const FIXA: Record<string, string> = {
   prioridade: "sticky left-0 z-10 w-28 min-w-28 max-w-28 bg-card",
   placa: "sticky left-28 z-10 w-56 min-w-56 max-w-56 bg-card shadow-[inset_-1px_0_0_var(--border)]",
 }
 
-/** Clique em qualquer ponto da linha abre os detalhes (atalho do mouse; o teclado usa o botão da placa). */
 function cliqueNaLinha(evento: MouseEvent<HTMLTableRowElement>, abrir: () => void) {
   if ((evento.target as HTMLElement).closest("button, a")) return
-  if (window.getSelection()?.toString()) return // a pessoa está selecionando texto
+  if (window.getSelection()?.toString()) return
   abrir()
 }
 
@@ -136,7 +129,6 @@ export function TabelaFila({ itens, posicoes, ordem, aoOrdenar, aoAbrir, legenda
                           <span className={cn("block w-full truncate", !endereco && "text-muted-foreground")}>
                             {endereco ?? "sem endereço"}
                           </span>
-                          {/* O mesmo poste pode ter várias luminárias na fila: diz qual é esta. */}
                           {noPoste && (
                             <span className="block w-full truncate text-xs text-muted-foreground tabular-nums">{noPoste}</span>
                           )}

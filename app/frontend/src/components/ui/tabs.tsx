@@ -80,7 +80,6 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      // O painel recebe foco pelo Tab depois da aba (padrão WAI-ARIA de abas): o anel mostra onde o foco está.
       className={cn("flex-1 rounded-xl text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring", className)}
       {...props}
     />

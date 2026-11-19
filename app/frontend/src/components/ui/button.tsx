@@ -8,8 +8,6 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Hover mistura o primário com o texto da tela: escurece no claro e clareia no escuro, o contraste
-        // com primary-foreground só aumenta (8,9:1 no claro, 7,6:1 no escuro; com /80 caía para 5,0 e 4,7).
         default:
           "bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),var(--foreground)_15%)]",
         outline:

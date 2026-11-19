@@ -11,7 +11,6 @@ const INTEGRANTES = [
   { nome: "Guilherme Nobre Bernardo", rm: "RM98604" },
 ] as const
 
-/** Rodapé da barra lateral: projeto, equipe (popover) e aviso de dados simulados. */
 export function RodapeProjeto() {
   return (
     <div className="flex flex-col items-start gap-1 px-2 text-xs text-sidebar-muted-foreground">

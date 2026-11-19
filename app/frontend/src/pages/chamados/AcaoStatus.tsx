@@ -9,15 +9,11 @@ import type { Chamado, StatusChamado } from "@/lib/tipos"
 
 export interface AcaoStatusProps {
   chamado: Chamado
-  /** Pede a troca (a página confirma o cancelamento e trata 401/409). */
   aoPedir: (chamado: Chamado, status: StatusChamado) => void
-  /** true enquanto o PATCH deste chamado está em andamento. */
   atualizando: boolean
-  /** Celular: Select e botão em largura total. */
   empilhado?: boolean
 }
 
-/** `Select` só com os próximos status válidos + botão "Atualizar status". Status final não tem controle. */
 export function AcaoStatus({ chamado, aoPedir, atualizando, empilhado = false }: AcaoStatusProps) {
   const opcoes = TRANSICOES_STATUS[chamado.status] ?? []
   const [escolhido, setEscolhido] = useState<StatusChamado | "">("")
@@ -57,13 +53,10 @@ export function AcaoStatus({ chamado, aoPedir, atualizando, empilhado = false }:
         type="button"
         variant="outline"
         size="sm"
-        // aria-disabled em vez de disabled: o botão continua com o foco enquanto o pedido anda (um botão
-        // desabilitado perde o foco para o <body>).
         aria-disabled={atualizando || undefined}
         aria-busy={atualizando || undefined}
         onClick={() => {
           if (atualizando) return
-          // Sem escolha ainda: abre a lista em vez de mandar um pedido vazio.
           if (!valido) setListaAberta(true)
           else aoPedir(chamado, valido)
         }}

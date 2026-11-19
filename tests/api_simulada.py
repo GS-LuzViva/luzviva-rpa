@@ -44,16 +44,16 @@ def dados_iniciais(agora: datetime) -> dict:
     ontem = agora - timedelta(days=1)
     luminarias = [
         lum(1, "IP0723371", "SE", "apagada", 0.4, ontem, 2),
-        lum(2, "IP0723371", "SE", "apagada", 0.6, ontem, 0),          # 2o ponto da mesma placa
+        lum(2, "IP0723371", "SE", "apagada", 0.6, ontem, 0),
         lum(3, "IP0298167", "PINHEIROS", "apagada", 0.2, ontem, 1),
         lum(4, "IP0511204", "CAMPO LIMPO", "apagada", 0.3, ontem, 1),
         lum(5, "IP0634410", "CAMPO LIMPO", "insuficiente", 3.1, ontem, 1),
         lum(6, "IP0102030", "PINHEIROS", "insuficiente", 2.5, ontem, 0),
         lum(7, "IP0845512", "SE", "ok", 18.0, ontem, 2),
         lum(8, "IP0400001", "PINHEIROS", "insuficiente", 4.0, ontem, 0),
-        lum(9, "IP0300003", "SE", "ok", 21.5, ontem, 0),               # consertada
+        lum(9, "IP0300003", "SE", "ok", 21.5, ontem, 0),
     ]
-    prioridades = {1: 90, 2: 60, 3: 80, 4: 70, 5: 40, 6: 150, 7: 20}  # 150: dado inconsistente
+    prioridades = {1: 90, 2: 60, 3: 80, 4: 70, 5: 40, 6: 150, 7: 20}
     fila = []
     for ponto in luminarias:
         if ponto["id_luminaria"] in prioridades:
@@ -61,7 +61,7 @@ def dados_iniciais(agora: datetime) -> dict:
                          "confianca_visao": 0.91 if ponto["ocorrencias_app"] else None,
                          "prioridade": prioridades[ponto["id_luminaria"]]})
     fila.append({"id_luminaria": 10, "placa": "XX123", "subprefeitura": "SE", "situacao": "apagada",
-                 "prioridade": 60})                                     # placa fora do padrão
+                 "prioridade": 60})
     fila.sort(key=lambda i: i["prioridade"], reverse=True)
 
     def chamado(dias, placa, area, situacao, status, prioridade):
@@ -72,9 +72,9 @@ def dados_iniciais(agora: datetime) -> dict:
                 "equipe": None, "origem": "rpa"}
 
     chamados = [
-        chamado(2, "IP0400001", "PINHEIROS", "insuficiente", "aberto", 30),        # → em_atendimento
-        chamado(7, "IP0511204", "CAMPO LIMPO", "apagada", "em_atendimento", 70),   # → escala (prazo 5)
-        chamado(3, "IP0300003", "SE", "apagada", "em_atendimento", 60),            # → conclui
+        chamado(2, "IP0400001", "PINHEIROS", "insuficiente", "aberto", 30),
+        chamado(7, "IP0511204", "CAMPO LIMPO", "apagada", "em_atendimento", 70),
+        chamado(3, "IP0300003", "SE", "apagada", "em_atendimento", 60),
     ]
     chamados[1]["equipe"] = "EQUIPE-SUL"
     chamados[2]["equipe"] = "EQUIPE-CENTRO"
@@ -97,7 +97,7 @@ class EstadoApi:
 
 def _criar_handler(estado: EstadoApi):
     class Handler(BaseHTTPRequestHandler):
-        def log_message(self, formato, *args):  # silencia o log padrão em stderr
+        def log_message(self, formato, *args):
             log.debug(formato, *args)
 
         def _responder(self, status: int, corpo: object) -> None:
@@ -183,7 +183,7 @@ def _criar_handler(estado: EstadoApi):
 
 
 class _Servidor(ThreadingHTTPServer):
-    allow_reuse_address = False  # no Windows, reuso deixaria dois servidores na mesma porta
+    allow_reuse_address = False
 
 
 def criar_servidor(porta: int = 0, estado: EstadoApi | None = None) -> tuple[ThreadingHTTPServer, EstadoApi]:

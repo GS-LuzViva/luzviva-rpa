@@ -12,7 +12,6 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { criarClienteConsulta } from "@/lib/consulta"
 
-// Cada tela é um pedaço separado do bundle, baixado só quando a pessoa abre a tela.
 const Mapa = lazy(() => import("@/pages/Mapa"))
 const Fila = lazy(() => import("@/pages/Fila"))
 const Chamados = lazy(() => import("@/pages/Chamados"))
@@ -38,7 +37,6 @@ export default function App() {
       <QueryClientProvider client={clienteConsulta}>
         <GestorKeyProvider>
           <TooltipProvider delayDuration={300}>
-            {/* HashRouter: o FastAPI serve static/ sem fallback de SPA, então a rota vive no "#". */}
             <HashRouter>
               <Routes>
                 <Route element={<AppShell />}>
@@ -60,7 +58,6 @@ export default function App() {
   )
 }
 
-/** No celular os botões principais ficam embaixo e em largura total; o aviso vai para o topo. */
 function Avisos() {
   const celular = useIsMobile()
   return <Toaster position={celular ? "top-center" : "bottom-right"} />

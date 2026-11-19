@@ -14,11 +14,11 @@ FORM = {"categoria": "luminaria_apagada", "lat": "-23.5712", "lon": "-46.6921", 
 
 def jpeg_com_gps() -> bytes:
     exif = Image.Exif()
-    exif[0x010F] = "CameraDeTeste"  # Make
-    exif[0x8825] = {1: "S", 2: (23.0, 34.0, 16.0), 3: "W", 4: (46.0, 41.0, 31.0)}  # GPSInfo
+    exif[0x010F] = "CameraDeTeste"
+    exif[0x8825] = {1: "S", 2: (23.0, 34.0, 16.0), 3: "W", 4: (46.0, 41.0, 31.0)}
     saida = io.BytesIO()
     Image.new("RGB", (8, 8), "black").save(saida, "JPEG", exif=exif)
-    assert Image.open(io.BytesIO(saida.getvalue())).getexif()  # o arquivo de teste tem EXIF de verdade
+    assert Image.open(io.BytesIO(saida.getvalue())).getexif()
     return saida.getvalue()
 
 
@@ -63,7 +63,7 @@ def test_foto_sem_visao_remove_exif(cliente, ambiente):
     assert len(ocorrencia["foto_id"]) == 16
 
     salva = ambiente / "fotos" / f"{ocorrencia['foto_id']}.jpg"
-    assert not Image.open(salva).getexif()  # sem EXIF e sem GPS
+    assert not Image.open(salva).getexif()
     exportado = cliente.get("/api/export/ocorrencias_app").json()["dados"]
     assert exportado == [ocorrencia]
 
@@ -85,7 +85,7 @@ def test_foto_com_visao(novo_cliente, monkeypatch):
         rota = respx.post("http://visao.teste/detectar").mock(return_value=httpx.Response(200, json=deteccao))
         ocorrencia = cliente.post("/api/fotos", files={"foto": ("p.jpg", jpeg_com_gps(), "image/jpeg")}, data=FORM).json()
     assert {k: ocorrencia[k] for k in deteccao} == deteccao
-    assert b"CameraDeTeste" not in rota.calls[0].request.content  # a visão também recebe a foto sem EXIF
+    assert b"CameraDeTeste" not in rota.calls[0].request.content
 
 
 def test_foto_com_visao_falhando_usa_dados_do_cidadao(novo_cliente, monkeypatch):
@@ -111,11 +111,10 @@ def test_foto_415_413_422(cliente, ambiente):
     sem_local = {"categoria": "luminaria_apagada"}
     resposta = cliente.post("/api/fotos", files={"foto": ("p.jpg", jpeg_com_gps(), "image/jpeg")}, data=sem_local)
     assert resposta.status_code == 422
-    assert not (ambiente / "fotos").exists() or not any((ambiente / "fotos").iterdir())  # nada gravado
+    assert not (ambiente / "fotos").exists() or not any((ambiente / "fotos").iterdir())
 
 
 def test_foto_sem_localizacao_usa_cadastro_pela_placa(cliente):
-    # O site só manda lat/lon se o cidadão compartilhar; a placa basta para achar o poste.
     form = {"categoria": "luminaria_apagada", "placa": "ip0000002"}
     resposta = cliente.post("/api/fotos", files={"foto": ("p.jpg", jpeg_com_gps(), "image/jpeg")}, data=form)
     assert resposta.status_code == 201, resposta.text
@@ -126,7 +125,7 @@ def test_foto_sem_localizacao_usa_cadastro_pela_placa(cliente):
 
 def test_foto_bomba_de_descompressao_recusada(cliente, ambiente):
     png = io.BytesIO()
-    Image.new("1", (8000, 6000)).save(png, "PNG")  # 48 MP em poucos KB
+    Image.new("1", (8000, 6000)).save(png, "PNG")
     resposta = cliente.post("/api/fotos", files={"foto": ("b.png", png.getvalue(), "image/png")}, data=FORM)
     assert resposta.status_code == 413
     assert not (ambiente / "fotos").exists() or not any((ambiente / "fotos").iterdir())
@@ -147,10 +146,10 @@ def test_foto_visao_com_campos_invalidos_mantem_relato_do_cidadao(novo_cliente, 
 
 
 def test_foto_area_vem_do_cadastro_e_nao_do_seletor(cliente):
-    form = {**FORM, "placa": "IP0000002", "area_piloto": "SE"}  # poste de PINHEIROS, seletor ficou em SE
+    form = {**FORM, "placa": "IP0000002", "area_piloto": "SE"}
     ocorrencia = cliente.post("/api/fotos", files={"foto": ("p.jpg", jpeg_com_gps(), "image/jpeg")}, data=form).json()
     assert ocorrencia["area_piloto"] == "PINHEIROS"
-    assert (ocorrencia["lat"], ocorrencia["lon"]) == (-23.5712, -46.6921)  # localização do cidadão é mantida
+    assert (ocorrencia["lat"], ocorrencia["lon"]) == (-23.5712, -46.6921)
 
 
 def test_relato_do_cidadao_continua_aberto_com_token(novo_cliente, monkeypatch):
@@ -158,4 +157,4 @@ def test_relato_do_cidadao_continua_aberto_com_token(novo_cliente, monkeypatch):
     cliente = novo_cliente()
     resposta = cliente.post("/api/fotos", files={"foto": ("p.jpg", jpeg_com_gps(), "image/jpeg")}, data=FORM)
     assert resposta.status_code == 201
-    assert resposta.json()["confianca_visao"] is None  # sem VISAO_URL, ninguém de fora define a confiança
+    assert resposta.json()["confianca_visao"] is None

@@ -7,16 +7,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useChaveGestor } from "@/hooks/use-chave-gestor"
 
-/** Por que o diálogo abriu: pelo botão do cabeçalho ou porque o servidor respondeu 401. */
 export type MotivoChave = "manual" | "faltando" | "recusada"
 
 export interface DialogoChaveProps {
   aberto: boolean
   aoMudarAberto: (aberto: boolean) => void
   motivo: MotivoChave
-  /** Chamado depois de salvar (a página refaz a troca de status que esperava a chave). */
   aoSalvar?: () => void
-  /** Ao fechar: devolve o foco a quem abriu (o diálogo abre por código, sem DialogTrigger). */
   aoDevolverFoco?: (evento: Event) => void
 }
 
@@ -26,7 +23,6 @@ const AVISOS: Record<MotivoChave, string | null> = {
   recusada: "O servidor recusou a chave informada. Confira a chave e informe de novo.",
 }
 
-/** Formulário da chave do gestor. A chave fica só na memória desta aba (nunca no navegador ou na URL). */
 function FormularioChave({ motivo, aoSalvar, aoFechar }: { motivo: MotivoChave; aoSalvar?: () => void; aoFechar: () => void }) {
   const { chave, definirChave } = useChaveGestor()
   const [texto, setTexto] = useState("")
@@ -113,8 +109,6 @@ function FormularioChave({ motivo, aoSalvar, aoFechar }: { motivo: MotivoChave; 
 }
 
 export function DialogoChave({ aberto, aoMudarAberto, motivo, aoSalvar, aoDevolverFoco }: DialogoChaveProps) {
-  // Nova sessão a cada abertura: o formulário remonta com o campo e o erro limpos, mas continua
-  // na tela durante a animação de saída.
   const [sessao, setSessao] = useState(0)
   const [abertoAntes, setAbertoAntes] = useState(aberto)
   if (aberto !== abertoAntes) {

@@ -20,7 +20,7 @@ def test_api_fora_do_ar_tenta_4_vezes_com_espera_exponencial_e_desiste(caplog):
     with pytest.raises(ApiIndisponivel, match="após 4 tentativas: GET /api/fila"):
         novo_cliente(esperas).obter_fila()
     assert len(responses.calls) == 4
-    assert esperas == [2.0, 4.0, 8.0]  # sem espera depois da última tentativa
+    assert esperas == [2.0, 4.0, 8.0]
     assert caplog.text.count("falha GET /api/fila (tentativa") == 4
 
 

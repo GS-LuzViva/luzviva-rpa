@@ -19,7 +19,6 @@ import { RodapeProjeto } from "./Equipe"
 import { MarcaLuzViva } from "./MarcaLuzViva"
 import { NAVEGACAO } from "./navegacao"
 
-/** Barra lateral escura (a "noite" em volta da área de trabalho). No celular vira Sheet. */
 export function BarraLateral() {
   const { setOpenMobile } = useSidebar()
   const [parametros] = useSearchParams()
@@ -28,7 +27,6 @@ export function BarraLateral() {
 
   return (
     <Sidebar collapsible="offcanvas" className="border-sidebar-border">
-      {/* Tudo da barra (marca, telas, tema e rodapé) dentro de um marco; o <nav> fica dentro dele. */}
       <aside aria-label="Menu do LuzViva" className="flex min-h-0 flex-1 flex-col">
         <SidebarHeader className="px-4 pt-5 pb-4">
           <NavLink
@@ -52,7 +50,6 @@ export function BarraLateral() {
                       isActive={pathname === caminho}
                       className="relative font-semibold text-sidebar-foreground before:absolute before:inset-y-1.5 before:left-0 before:w-[3px] before:rounded-full data-active:font-bold data-active:before:bg-sidebar-primary"
                     >
-                      {/* NavLink põe aria-current="page" na tela atual. */}
                       <NavLink
                         end
                         to={{

@@ -34,13 +34,13 @@ class ChamadoInconsistente(Exception):
 
 @dataclass(frozen=True)
 class DecisaoItem:
-    acao: str  # abrir | monitorar | duplicado | invalido
+    acao: str
     motivo: str
 
 
 @dataclass(frozen=True)
 class DecisaoChamado:
-    acao: str  # concluir | em_atendimento | manter
+    acao: str
     escalar: bool
     dias_em_aberto: float
     prazo_dias: int
@@ -48,7 +48,6 @@ class DecisaoChamado:
     concluido_em: str | None = None
 
 
-# ---------------------------------------------------------------- fila
 
 def validar_envelope(corpo: object) -> list:
     """Devolve a lista `dados` do envelope ou levanta EnvelopeInvalido."""
@@ -144,7 +143,6 @@ def placas_com_chamado(chamados: list[dict]) -> set[str]:
     return {c["placa"] for c in chamados if c.get("placa") and c.get("status") in STATUS_EM_ABERTO}
 
 
-# ---------------------------------------------------------------- acompanhamento
 
 def prazo_do_chamado(chamado: dict) -> int:
     """Prazo de reparo pela situação detectada; situação desconhecida usa o prazo mais curto."""

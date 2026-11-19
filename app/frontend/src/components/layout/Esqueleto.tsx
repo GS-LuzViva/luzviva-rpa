@@ -1,6 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
-/** Enquanto o código da tela chega (React.lazy). */
 export function CarregandoTela() {
   return (
     <div role="status" aria-live="polite" className="flex flex-col gap-6">

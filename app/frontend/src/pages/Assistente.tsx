@@ -11,10 +11,6 @@ import { FormularioPergunta } from "./assistente/FormularioPergunta"
 import { Sugestoes } from "./assistente/Sugestoes"
 import { TurnoConversa } from "./assistente/TurnoConversa"
 
-/**
- * Assistente da fila (`#/assistente`): conversa só em memória, resposta sempre com as fontes e
- * "Não consta na base" quando a base não cobre. `?placa=IP0723371` (vindo da Fila) já preenche a placa.
- */
 export default function Assistente() {
   const [busca] = useSearchParams()
   const placaUrl = normalizarPlaca(busca.get("placa") ?? "")
@@ -33,7 +29,6 @@ export default function Assistente() {
   const refFim = useRef<HTMLDivElement>(null)
   const ocupado = perguntar.isPending
 
-  // A pergunta nova aparece embaixo: rola até ela (sem animação para quem pediu menos movimento).
   const totalTurnos = turnos.length
   useEffect(() => {
     if (totalTurnos === 0) return
@@ -43,7 +38,6 @@ export default function Assistente() {
 
   const responder = async (turno: Turno) => {
     setAnuncio("Consultando o assistente…")
-    // usePerguntar nunca rejeita: qualquer falha vira a resposta "Assistente indisponível no momento".
     const resposta = await perguntar.mutateAsync({ pergunta: turno.pergunta, placa: turno.placa })
     setTurnos((atuais) => atuais.map((t) => (t.id === turno.id ? { ...t, resposta } : t)))
     setAnuncio(
@@ -68,7 +62,6 @@ export default function Assistente() {
   const escolherSugestao = (sugestao: Sugestao) => {
     if (ocupado) return
     setPergunta(sugestao.texto)
-    // A sugestão leva a própria placa (ou nenhuma: "Quem é responsável pela área…" não é de um poste).
     enviar(sugestao.texto, sugestao.placa)
   }
 
@@ -109,7 +102,6 @@ export default function Assistente() {
           <div ref={refFim} />
         </section>
 
-        {/* Anúncio único por resposta, para o leitor de tela não reler a conversa inteira. */}
         <div aria-live="polite" className="sr-only">
           {anuncio}
         </div>

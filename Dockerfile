@@ -1,4 +1,3 @@
-# Robô de RPA do LuzViva: lê a fila da API do app e abre/acompanha chamados de hora em hora.
 FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -17,5 +16,4 @@ RUN useradd --system --uid 10002 robo \
     && chown -R robo /srv/rpa/logs /srv/rpa/saida
 USER robo
 
-# Fica rodando: uma execução agora e depois uma por intervalo (padrão 1 hora).
 CMD ["sh", "-c", "python -m luzviva_rpa --intervalo ${LUZVIVA_RPA_INTERVALO:-3600}"]

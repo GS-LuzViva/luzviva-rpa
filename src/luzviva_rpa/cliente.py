@@ -64,7 +64,6 @@ class ApiCliente:
         if token:
             self.sessao.headers["X-API-Key"] = token
 
-    # ---------- rotas ----------
 
     def obter_fila(self) -> Any:
         return self._json("GET", "/api/fila", self._requisitar("GET", "/api/fila"))
@@ -93,20 +92,19 @@ class ApiCliente:
         rota = f"/api/chamados/{id_chamado}"
         return self._json("PATCH", rota, self._requisitar("PATCH", rota, json=campos))
 
-    # ---------- infraestrutura ----------
 
     def _requisitar(self, metodo: str, rota: str, *, aceitar=(200, 201), **kwargs) -> requests.Response:
         url = f"{self.base_url}{rota}"
         for tentativa in range(1, self.tentativas + 1):
             try:
                 resp = self.sessao.request(metodo, url, timeout=self.timeout, **kwargs)
-            except requests.RequestException as exc:  # conexão, timeout, corpo truncado, redirecionamento...
+            except requests.RequestException as exc:
                 motivo = type(exc).__name__
             else:
                 if resp.status_code in aceitar:
                     return resp
                 if resp.status_code < 500 and resp.status_code != 429:
-                    raise ErroHttp(metodo, rota, resp.status_code)  # erro do pedido: repetir não ajuda
+                    raise ErroHttp(metodo, rota, resp.status_code)
                 motivo = f"HTTP {resp.status_code}"
             log.warning("falha %s %s (tentativa %d/%d): %s", metodo, rota, tentativa, self.tentativas, motivo)
             if tentativa < self.tentativas:

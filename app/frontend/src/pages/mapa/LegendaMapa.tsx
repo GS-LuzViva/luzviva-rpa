@@ -13,11 +13,6 @@ export interface LegendaMapaProps {
   className?: string
 }
 
-/**
- * Legenda sobre o mapa: ícone, nome e contagem de cada situação (cor + ícone + texto). Cada item
- * é um botão (aria-pressed) que mostra ou esconde aquela situação no mapa. Duas colunas no
- * celular, uma abaixo de 360 px (os nomes e as contagens não cabem lado a lado em 320 px).
- */
 export function LegendaMapa({ contagem, visiveis, aoAlternar, className }: LegendaMapaProps) {
   return (
     <div
@@ -44,7 +39,6 @@ export function LegendaMapa({ contagem, visiveis, aoAlternar, className }: Legen
                   !ativa && "text-muted-foreground",
                 )}
               >
-                {/* O ícone tem a cor da situação: faz o papel do ponto colorido e diz qual é sem depender da cor. */}
                 <Icone aria-hidden="true" className={cn("size-4 shrink-0", ativa ? texto : "text-muted-foreground")} />
                 <span className={cn("min-w-0 flex-1 truncate", !ativa && "line-through decoration-1")}>
                   {NOMES_SITUACAO[situacao]}

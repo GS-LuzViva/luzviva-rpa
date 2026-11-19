@@ -18,7 +18,7 @@ def test_post_201_com_location_e_padroes(cliente):
     assert resposta.headers["location"] == "/api/chamados/CH-20261109-IP0723371"
     assert (chamado["status"], chamado["origem"], chamado["concluido_em"], chamado["equipe"]) == ("aberto", "rpa", None, None)
     assert chamado["aberto_em"] == "2026-11-09T07:00:00"
-    assert chamado["atualizado_em"]  # padrão = agora
+    assert chamado["atualizado_em"]
     assert cliente.get(resposta.headers["location"]).json() == chamado
 
 
@@ -48,16 +48,15 @@ def test_patch_transicoes(cliente):
     em_atendimento = cliente.patch(url, json={"status": "em_atendimento", "equipe": "EQUIPE-CENTRO"})
     assert em_atendimento.status_code == 200
     assert em_atendimento.json()["equipe"] == "EQUIPE-CENTRO"
-    assert cliente.patch(url, json={"status": "em_atendimento"}).status_code == 200  # idempotente
-    assert cliente.patch(url, json={"status": "aberto"}).status_code == 409  # não volta
+    assert cliente.patch(url, json={"status": "em_atendimento"}).status_code == 200
+    assert cliente.patch(url, json={"status": "aberto"}).status_code == 409
 
     concluido = cliente.patch(url, json={"status": "concluido"})
     assert concluido.status_code == 200
-    assert concluido.json()["concluido_em"]  # sem concluido_em, usa agora
+    assert concluido.json()["concluido_em"]
     assert cliente.patch(url, json={"status": "concluido"}).status_code == 200
-    assert cliente.patch(url, json={"status": "cancelado"}).status_code == 409  # estado final
+    assert cliente.patch(url, json={"status": "cancelado"}).status_code == 409
 
-    # Depois de concluído, a placa pode receber um chamado novo
     assert abrir(cliente, id_chamado="CH-NOVO").status_code == 201
 
 

@@ -42,7 +42,6 @@ Texto = Annotated[str, StringConstraints(min_length=1, max_length=64)]
 
 
 class Base(BaseModel):
-    # Campos fora do contrato são ignorados (não chegam aos arquivos do dia).
     model_config = ConfigDict(allow_inf_nan=False)
 
 

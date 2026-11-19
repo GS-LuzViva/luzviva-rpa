@@ -23,7 +23,7 @@ TRANSICOES = {
     "cancelado": set(),
 }
 
-_trava = threading.Lock()  # verificação + escrita sem corrida (um chamado aberto por placa)
+_trava = threading.Lock()
 
 
 class Repositorio:

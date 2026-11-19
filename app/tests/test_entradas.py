@@ -99,7 +99,6 @@ def test_token_exigido_quando_definido(novo_cliente, monkeypatch):
     assert cliente.post("/api/chamados", json=chamado, headers=ok).status_code == 201
     assert cliente.post("/api/ocorrencias", json=OCORRENCIA).status_code == 401
     assert cliente.post("/api/ocorrencias", json=OCORRENCIA, headers=ok).status_code == 201
-    # Leitura continua aberta (o relato do cidadão, POST /api/fotos, é testado em test_servicos.py)
     assert cliente.get("/api/fila").status_code == 200
 
 
@@ -111,7 +110,6 @@ def test_export_exige_token_quando_definido(novo_cliente, monkeypatch):
 
 
 def test_ocorrencia_da_visao_exige_token_e_foto_do_cidadao_nao(novo_cliente, monkeypatch):
-    # Sem a chave, ninguém injeta confiança de visão para subir a prioridade de um poste.
     monkeypatch.setenv("LUZVIVA_API_TOKEN", "segredo-de-teste")
     cliente = novo_cliente()
     ocorrencia = {"id_ocorrencia": "O20261110-0099", "data_hora": "2026-11-10T21:03:00",

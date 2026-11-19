@@ -1,5 +1,3 @@
-# Sobe o site + API e o robô de RPA juntos: docker compose up --build
-# O robô só começa quando a API responde no /health. Configuração em .env (copie de .env.example).
 services:
   app:
     build: ./app

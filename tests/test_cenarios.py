@@ -14,7 +14,6 @@ def rodar(cliente, saida, **kw):
     return executar(cliente, saida, relogio=lambda: AGORA, **kw)
 
 
-# ---------------------------------------------------------------- 1. sucesso
 
 def test_cenario_sucesso_abre_chamados_para_itens_elegiveis(arquivo_log, saida):
     fila = envelope([
@@ -32,7 +31,6 @@ def test_cenario_sucesso_abre_chamados_para_itens_elegiveis(arquivo_log, saida):
     assert all(p["status"] == "aberto" and p["origem"] == "rpa" for p in cliente.posts)
     assert resumo["contagem"]["lidos"] == 3 and resumo["contagem"]["abertos"] == 3
     assert resumo["contagem"]["falhas"] == 0 and resumo["erros"] == []
-    # resumo da execução gravado em JSON, com a duração (AHT do robô)
     gravado = json.loads(next(saida.glob("execucao_*.json")).read_text(encoding="utf-8"))
     assert gravado["contagem"]["abertos"] == 3 and gravado["duracao_s"] >= 0
     texto = arquivo_log.read_text(encoding="utf-8")
@@ -49,16 +47,15 @@ def test_simulacao_decide_mas_nao_grava_na_api(arquivo_log, saida):
     assert "[simulação] abriria chamado" in arquivo_log.read_text(encoding="utf-8")
 
 
-# ---------------------------------------------------------------- 2. decisão
 
 def test_cenario_decisao_corte_duplicado_invalido_e_placa_repetida(arquivo_log, saida):
     fila = envelope([
-        item_fila("IP0102030", 150),                                   # prioridade inválida
-        item_fila("IP0723371", 90),                                    # abre
-        item_fila("IP0511204", 70, subprefeitura="CAMPO LIMPO"),       # já tem chamado aberto
-        item_fila("IP0723371", 60),                                    # placa repetida na fila
-        item_fila("IP0845512", 20, "ok"),                              # abaixo do corte → monitorar
-        item_fila("IP0999999", 29, "insuficiente"),                    # abaixo do corte → monitorar
+        item_fila("IP0102030", 150),
+        item_fila("IP0723371", 90),
+        item_fila("IP0511204", 70, subprefeitura="CAMPO LIMPO"),
+        item_fila("IP0723371", 60),
+        item_fila("IP0845512", 20, "ok"),
+        item_fila("IP0999999", 29, "insuficiente"),
     ])
     cliente = FakeCliente(fila=fila, chamados=[chamado("IP0511204", "2026-11-09T20:00:00",
                                                        "em_atendimento", area="CAMPO LIMPO")])
@@ -79,14 +76,13 @@ def test_conflito_409_da_api_conta_como_duplicado(arquivo_log, saida):
     assert (c["abertos"], c["duplicados"], c["falhas"]) == (0, 1, 0)
 
 
-# ---------------------------------------------------------------- 3. falha
 
 def test_cenario_falha_api_fora_do_ar_registra_erro_e_nao_quebra(arquivo_log, saida):
     fora = ApiIndisponivel("GET", "/api/fila", 4)
     cliente = FakeCliente(erros={"obter_fila": fora,
                                  "obter_chamados_abertos": ApiIndisponivel("GET", "/api/chamados", 4)})
 
-    resumo = rodar(cliente, saida)  # não levanta exceção
+    resumo = rodar(cliente, saida)
 
     assert resumo["erros"] == ["fila: API indisponível após 4 tentativas: GET /api/fila",
                                "chamados: API indisponível após 4 tentativas: GET /api/chamados"]
@@ -102,7 +98,7 @@ def test_cenario_falha_fila_json_invalido_segue_para_os_chamados(arquivo_log, sa
                           chamados=[chamado(aberto_em="2026-11-08T08:00:00")])
     resumo = rodar(cliente, saida)
     assert resumo["erros"] == ["fila: resposta inválida em GET /api/fila: JSON inválido"]
-    assert resumo["contagem"]["em_atendimento"] == 1  # a fase de acompanhamento rodou
+    assert resumo["contagem"]["em_atendimento"] == 1
 
 
 def test_cenario_falha_fila_sem_lista_de_dados(arquivo_log, saida):
@@ -142,7 +138,6 @@ def test_sem_lista_de_chamados_usa_campo_da_fila_e_segue(arquivo_log, saida):
     assert resumo["contagem"]["duplicados"] == 1
 
 
-# ---------------------------------------------------------------- acompanhamento
 
 def test_acompanhamento_em_atendimento_escalonamento_e_conclusao(arquivo_log, saida):
     chamados = [
@@ -185,20 +180,19 @@ def test_falha_no_patch_conta_falha_e_segue(arquivo_log, saida):
     assert (c["em_atendimento"], c["falhas"]) == (0, 1)
 
 
-# ---------------------------------------------------------------- LGPD
 
 def test_log_nao_tem_dado_de_cidadao(arquivo_log, saida):
     cidadao = {"nome": "Maria Exemplo da Silva", "email": "maria@exemplo.com", "telefone": "11 98888-7777"}
     fila = envelope([
         item_fila("IP0723371", 90, cidadao=cidadao),
-        item_fila("maria@exemplo.com", 90, cidadao=cidadao),     # placa digitada errado pelo cidadão
+        item_fila("maria@exemplo.com", 90, cidadao=cidadao),
         item_fila("IP0845512", 20, "ok", cidadao=cidadao),
         item_fila("IP0102030", 150, cidadao=cidadao),
     ])
     rodar(FakeCliente(fila=fila), saida)
 
     texto = arquivo_log.read_text(encoding="utf-8")
-    assert "IP0723371" in texto  # a placa pode
+    assert "IP0723371" in texto
     assert "@" not in texto
     for proibido in ("Maria", "Silva", "98888", "telefone", "cidadao"):
         assert proibido not in texto
@@ -232,6 +226,6 @@ def test_falha_api_cai_no_meio_da_fila_interrompe_fase(tmp_path):
         mock.post(f"{base}/api/chamados", body=requests.exceptions.ChunkedEncodingError("corte"))
         cliente = ApiCliente(base, tentativas=2, dormir=lambda s: None)
         resumo = executar(cliente, tmp_path)
-    assert resumo["contagem"]["lidos"] == 3  # 3 itens falharam seguidos; os outros 3 ficam para depois
+    assert resumo["contagem"]["lidos"] == 3
     assert resumo["contagem"]["falhas"] == 3
     assert list(tmp_path.glob("execucao_*.json"))

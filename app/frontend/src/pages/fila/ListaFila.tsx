@@ -13,14 +13,12 @@ import { ehColunaOrdenavel, ordenarFila, textoPosicaoNoPoste, type PosicaoNoPost
 
 export interface ListaFilaProps {
   itens: readonly ItemFila[]
-  /** Posição de cada luminária no poste (`posicoesNoPoste`), por id da luminária. */
   posicoes: ReadonlyMap<number, PosicaoNoPoste>
   ordem: SortingState
   aoAbrir: (item: ItemFila) => void
   legenda: string
 }
 
-/** Fila no celular (< 768 px): uma linha empilhada por luminária, cada uma é um botão. */
 export function ListaFila({ itens, posicoes, ordem, aoAbrir, legenda }: ListaFilaProps) {
   const atual = ordem[0]
   const ordenados = useMemo(
@@ -56,7 +54,6 @@ export function ListaFila({ itens, posicoes, ordem, aoAbrir, legenda }: ListaFil
                 <span className={endereco ? "line-clamp-2 text-sm" : "text-sm text-muted-foreground"}>
                   {endereco ?? "sem endereço"}
                 </span>
-                {/* O mesmo poste pode ter várias luminárias na fila: diz qual é esta. */}
                 {noPoste && <span className="text-xs text-muted-foreground tabular-nums">{noPoste}</span>}
               </span>
               <span className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">

@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils"
 import { NOMES_SITUACAO } from "@/lib/dominio"
 import type { Situacao } from "@/lib/tipos"
 
-/** Ícone e classes de cor de cada situação (texto/ícone sobre o preenchimento claro). */
 const ESTILO_SITUACAO: Record<Situacao, { icone: LucideIcon; classes: string }> = {
   ok: { icone: Lightbulb, classes: "bg-ok-fundo text-ok" },
   insuficiente: { icone: SunDim, classes: "bg-insuficiente-fundo text-insuficiente" },
@@ -14,12 +13,10 @@ const ESTILO_SITUACAO: Record<Situacao, { icone: LucideIcon; classes: string }> 
 
 export interface SituacaoBadgeProps {
   situacao: Situacao
-  /** sm: tabelas densas; md: padrão. */
   size?: "sm" | "md"
   className?: string
 }
 
-/** Situação da luminária com ícone + texto + cor (nunca só a cor). */
 export function SituacaoBadge({ situacao, size = "md", className }: SituacaoBadgeProps) {
   const estilo = ESTILO_SITUACAO[situacao] ?? ESTILO_SITUACAO.sem_medicao
   const Icone = estilo.icone

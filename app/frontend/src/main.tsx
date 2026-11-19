@@ -5,7 +5,6 @@ import "./index.css"
 import App from "./App.tsx"
 import { aplicarTema, lerPreferencia, resolverTema } from "@/lib/tema"
 
-// Antes do primeiro render: põe .light/.dark no <html> para não piscar o tema errado.
 aplicarTema(resolverTema(lerPreferencia()))
 
 const raiz = document.getElementById("root")

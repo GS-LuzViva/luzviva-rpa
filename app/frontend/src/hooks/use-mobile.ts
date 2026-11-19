@@ -9,7 +9,6 @@ function assinar(aoMudar: () => void) {
   return () => consulta.removeEventListener("change", aoMudar)
 }
 
-/** true abaixo de 768 px (celular: a barra lateral vira Sheet). */
 export function useIsMobile() {
   return useSyncExternalStore(
     assinar,

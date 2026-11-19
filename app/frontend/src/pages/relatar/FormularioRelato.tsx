@@ -51,7 +51,6 @@ function ErroCampo({ campo, erro }: { campo: CampoRelato; erro?: string }) {
   )
 }
 
-/** Formulário do relato, pensado para celular à noite: uma coluna, alvos grandes, erro no campo. */
 export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: FormularioRelatoProps) {
   const enviar = useEnviarRelato()
   const enviando = enviar.isPending
@@ -72,7 +71,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
 
   const alterar = <K extends keyof DadosRelato>(campo: K, valor: DadosRelato[K]) => {
     setDados((atual) => ({ ...atual, [campo]: valor }))
-    // O aviso de falha do envio anterior deixa de valer quando a pessoa corrige algo.
     if (enviar.isError) enviar.reset()
   }
   const limparErro = (...campos: CampoRelato[]) => {
@@ -119,7 +117,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
       {
         onSuccess: aoEnviar,
         onError: (erro) => {
-          // Foto recusada pelo servidor: o erro também aparece no campo da foto.
           if (erro instanceof ErroApi && (erro.status === 413 || erro.status === 415)) {
             setErros((atual) => ({
               ...atual,
@@ -134,8 +131,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
     )
   }
 
-  // Foto escolhida ou placa digitada e ainda não enviada: o navegador confirma antes de recarregar ou fechar
-  // a aba. Depois do envio o formulário sai da tela e o aviso some junto.
   const temRascunho = Boolean(dados.foto) || (dados.placa !== "" && dados.placa !== placaDigitada(placaInicial))
   useEffect(() => {
     if (!temRascunho) return
@@ -159,7 +154,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
       aria-label="Relato de poste com problema"
       className="flex max-w-xl flex-col gap-6 max-md:gap-5"
     >
-      {/* 1. Placa, com a prévia ao vivo */}
       <div className="flex flex-col gap-2">
         <Label htmlFor={ID.placa} className="font-semibold">
           Placa do poste
@@ -203,7 +197,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
         <ErroCampo campo="placa" erro={erros.placa} />
       </div>
 
-      {/* 2. Foto */}
       <CampoFoto
         id={ID.foto}
         inputRef={refFoto}
@@ -221,7 +214,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
         }}
       />
 
-      {/* 3. O que está acontecendo */}
       <div className="flex flex-col gap-2">
         <span id="relato-problema-titulo" className="text-sm font-semibold">
           O que está acontecendo
@@ -259,7 +251,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
         <ErroCampo campo="categoria" erro={erros.categoria} />
       </div>
 
-      {/* 4. Área */}
       <div className="flex flex-col gap-2">
         <Label htmlFor={ID.area} className="font-semibold">
           Área
@@ -296,7 +287,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
         <ErroCampo campo="area" erro={erros.area} />
       </div>
 
-      {/* 5. Localização */}
       <CampoLocalizacao
         localizacao={dados.localizacao}
         desabilitado={enviando}
@@ -306,7 +296,6 @@ export function FormularioRelato({ placaInicial = "", areaInicial, aoEnviar }: F
         }}
       />
 
-      {/* Privacidade (LGPD) */}
       <p className="flex items-start gap-2 rounded-lg bg-muted px-3 py-2.5 text-sm text-muted-foreground">
         <ShieldCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-ok" />
         <span>

@@ -17,14 +17,8 @@ export interface ListaFalhasProps {
   className?: string
 }
 
-/**
- * Postes com falha da área, por prioridade (apagada primeiro, depois menor lux). Cada linha é um
- * botão que centraliza o mapa no poste e abre o popup: é também o caminho pelo teclado, já que os
- * círculos do mapa (canvas) não recebem foco.
- */
 export function ListaFalhas({ postes, nomeDaArea, selecionado, aoEscolher, className }: ListaFalhasProps) {
   const listaRef = useRef<HTMLUListElement>(null)
-  // Poste aberto no mapa (pelo clique num círculo ou por link): a linha dele aparece na lista.
   useEffect(() => {
     if (!selecionado) return
     listaRef.current?.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "nearest" })

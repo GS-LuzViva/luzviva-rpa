@@ -14,7 +14,6 @@ from zoneinfo import ZoneInfo
 
 FUSO = ZoneInfo("America/Sao_Paulo")
 
-# Regras do RPA (especificação da API)
 CORTE_PRIORIDADE = 30
 PRAZO_REPARO_DIAS = {"apagada": 5, "insuficiente": 10}
 DIAS_PARA_ATENDIMENTO = 1
@@ -26,12 +25,11 @@ EQUIPE_POR_AREA = {
 SITUACOES_QUE_ABREM = ("apagada", "insuficiente")
 REGEX_PLACA = r"^IP\d{7}$"
 
-# Resiliência na chamada à API
 TIMEOUT_S = 20
 TENTATIVAS = 4
-ESPERA_BASE_S = 2.0  # esperas entre tentativas: 2, 4, 8 s
+ESPERA_BASE_S = 2.0
 
-INTERVALO_PADRAO_S = 3600  # agendamento de hora em hora
+INTERVALO_PADRAO_S = 3600
 
 
 class ConfiguracaoInvalida(Exception):

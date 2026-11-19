@@ -11,7 +11,6 @@ const OPCOES: { valor: PreferenciaTema; rotulo: string; icone: typeof Sun }[] = 
   { valor: "sistema", rotulo: "Sistema", icone: Monitor },
 ]
 
-/** Seletor de tema (claro, escuro, sistema) para a barra lateral escura. */
 export function AlternarTema() {
   const { preferencia, definirPreferencia } = useTema()
   const idRotulo = useId()

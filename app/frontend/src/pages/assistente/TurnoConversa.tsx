@@ -28,7 +28,6 @@ function Resposta({ resposta }: { resposta: RespostaAssistente }) {
         </span>
       </div>
 
-      {/* Texto puro: o React escapa tudo; quebras de linha da resposta são mantidas. */}
       <p className="max-w-[75ch] whitespace-pre-line">{resposta.resposta}</p>
 
       {fontes.length > 0 ? (
@@ -60,7 +59,6 @@ interface TurnoConversaProps {
   ocupado: boolean
 }
 
-/** Um par pergunta e resposta da conversa. */
 export function TurnoConversa({ turno, aoTentarDeNovo, ocupado }: TurnoConversaProps) {
   const { resposta } = turno
   return (
@@ -83,7 +81,6 @@ export function TurnoConversa({ turno, aoTentarDeNovo, ocupado }: TurnoConversaP
           <Skeleton className="h-4 w-3/4" />
         </div>
       ) : ehIndisponivel(resposta) ? (
-        // Sem role="alert": quem anuncia a resposta é a região ao vivo da página (uma vez só).
         <Alert role={undefined} className="border-insuficiente/40 p-4">
           <CircleAlert aria-hidden="true" className="text-insuficiente" />
           <AlertTitle>Assistente indisponível no momento</AlertTitle>
@@ -97,7 +94,6 @@ export function TurnoConversa({ turno, aoTentarDeNovo, ocupado }: TurnoConversaP
               variant="outline"
               disabled={ocupado}
               onClick={() => aoTentarDeNovo(turno)}
-              // O AlertDescription pinta o texto de muted; o botão volta à cor normal para não parecer desabilitado.
               className="text-foreground max-sm:w-full"
             >
               <RotateCcw aria-hidden="true" />

@@ -41,7 +41,6 @@ def test_painel(cliente):
 def test_fila_ordenada_e_com_chamado_do_banco(cliente):
     fila = cliente.get("/api/fila").json()
     assert [d["prioridade"] for d in fila["dados"]] == [80, 30]
-    # O banco não tem o chamado "CH-VELHO" do pipeline: o estado atual (nenhum) vence.
     assert all(d["chamado_aberto"] is None and d["status_chamado"] is None for d in fila["dados"])
 
     chamado = {"placa": "IP0000001", "area_piloto": "SE", "prioridade": 80, "situacao_detectada": "apagada"}

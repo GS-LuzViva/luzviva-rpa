@@ -1,27 +1,16 @@
-/**
- * Agrupa as luminárias da view em postes (mesma placa, mesmo ponto e mesma situação).
- * Um poste pode ter várias luminárias com a mesma leitura; no mapa elas ficariam empilhadas
- * no mesmo pixel e na lista apareceriam repetidas. As contagens continuam por luminária,
- * iguais às do Painel.
- */
 import { SITUACOES } from "@/lib/dominio"
 import type { Luminaria, Situacao } from "@/lib/tipos"
 
 export interface Poste {
-  /** Chave estável do grupo (placa, ponto e situação). */
   id: string
   placa: string | null
   endereco: string | null
   lat: number
   lon: number
   situacao: Situacao
-  /** Menor leitura entre as luminárias do poste (a pior). */
   ultimo_lux: number | null
-  /** Leitura mais recente entre as luminárias do poste. */
   ultima_medicao: string | null
-  /** Maior número de relatos do app entre as luminárias do poste. */
   ocorrencias_app: number
-  /** Quantas luminárias da view estão neste poste. */
   luminarias: number
 }
 
@@ -33,7 +22,6 @@ export function contagemVazia(): Contagem {
 
 const temCoordenada = (l: Luminaria) => Number.isFinite(l.lat) && Number.isFinite(l.lon)
 
-/** Agrupa em postes e conta luminárias por situação. */
 export function agruparPostes(luminarias: readonly Luminaria[]): { postes: Poste[]; contagem: Contagem; total: number } {
   const porChave = new Map<string, Poste>()
   const contagem = contagemVazia()
@@ -73,14 +61,12 @@ export function agruparPostes(luminarias: readonly Luminaria[]): { postes: Poste
   return { postes: [...porChave.values()], contagem, total }
 }
 
-/** Ordem de desenho: as falhas por cima (o último desenhado fica no topo do canvas). */
 const ORDEM_DESENHO: Record<Situacao, number> = { sem_medicao: 0, ok: 1, insuficiente: 2, apagada: 3 }
 
 export function ordenarParaDesenho(postes: readonly Poste[]): Poste[] {
   return [...postes].sort((a, b) => ORDEM_DESENHO[a.situacao] - ORDEM_DESENHO[b.situacao])
 }
 
-/** Postes com falha: apagada primeiro, depois do menor lux para o maior (sem leitura no fim). */
 export function postesComFalha(postes: readonly Poste[]): Poste[] {
   return postes
     .filter((p) => p.situacao === "apagada" || p.situacao === "insuficiente")

@@ -17,11 +17,6 @@ import { cn } from "@/lib/utils"
 
 import { SEGMENTOS, formatarPercentual1, montarLinhas, valorSegmento, type ChaveSegmento, type LinhaPainel } from "./painel/comparacao"
 
-/**
- * Chamados em aberto (aberto ou em atendimento) contados agora na API de chamados, por área: o
- * mesmo número da tela Chamados. A view do painel guarda o número da geração dos dados, que fica
- * velho a cada chamado aberto ou concluído; ela só vale se a consulta ao vivo falhar.
- */
 type ChamadosAbertos =
   | { estado: "vivo"; porArea: ReadonlyMap<Area, number> }
   | { estado: "carregando" }
@@ -41,14 +36,12 @@ function useChamadosAbertos(): ChamadosAbertos {
   }, [consulta.data, consulta.isError])
 }
 
-/** Número de chamados em aberto da área: ao vivo, ou o da view se a consulta falhou. null = carregando. */
 function chamadosDaArea(linha: LinhaPainel, abertos: ChamadosAbertos): number | null {
   if (abertos.estado === "vivo") return abertos.porArea.get(linha.subprefeitura) ?? 0
   if (abertos.estado === "da_geracao") return linha.chamados_em_aberto
   return null
 }
 
-/** Valor da célula ou do indicador: esqueleto enquanto carrega, aviso quando é o número antigo. */
 function ValorChamados({ linha, abertos }: { linha: LinhaPainel; abertos: ChamadosAbertos }) {
   const n = chamadosDaArea(linha, abertos)
   if (n === null) {
@@ -76,7 +69,6 @@ const TEXTO_ICONE: Record<ChaveSegmento, string> = {
   ok: "text-ok",
 }
 
-/** Legenda única da barra empilhada, no topo da comparação. */
 function LegendaBarra() {
   return (
     <ul aria-label="Legenda da barra" className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
@@ -94,7 +86,6 @@ function LegendaBarra() {
   )
 }
 
-/** Barra empilhada das inspecionadas (apagada, insuficiente, ok) com o equivalente em texto. */
 function BarraSituacao({ linha }: { linha: LinhaPainel }) {
   const total = linha.luminarias_inspecionadas
   const nome = nomeArea(linha.subprefeitura)
@@ -150,7 +141,6 @@ function LinhaArea({ linha, abertos }: { linha: LinhaPainel; abertos: ChamadosAb
     <li className="grid gap-4 border-b p-4 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] md:p-6 lg:grid-cols-[8rem_7.5rem_minmax(0,1fr)_15rem] lg:items-start lg:gap-6">
       <div className="flex items-center justify-between gap-2 sm:col-span-2 lg:col-span-1 lg:flex-col lg:items-start">
         <h3 className="text-lg font-bold">{nome}</h3>
-        {/* Mesmo botão "Ver no mapa" da fila (contorno; 44 px no celular pelo tamanho padrão). */}
         <Button asChild variant="outline">
           <Link to={`/?area=${encodeURIComponent(linha.subprefeitura)}`}>
             <MapPin aria-hidden="true" />

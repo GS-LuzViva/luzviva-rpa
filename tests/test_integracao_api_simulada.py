@@ -30,13 +30,13 @@ def test_execucao_ponta_a_ponta_e_idempotente(api, arquivo_log, saida):
     assert estado.dados["chamados"]["CH-20261107-IP0300003"]["status"] == "concluido"
 
     segunda = executar(cliente, saida, relogio=lambda: AGORA)["contagem"]
-    assert segunda["abertos"] == 0 and segunda["duplicados"] == 5  # nada é aberto duas vezes
+    assert segunda["abertos"] == 0 and segunda["duplicados"] == 5
     assert len(estado.posts) == 3
 
 
 def test_token_errado_vira_falha_por_item_sem_derrubar_o_robo(api, arquivo_log, saida):
     url, estado = api
     resumo = executar(ApiCliente(url, "token-errado", dormir=lambda s: None), saida, relogio=lambda: AGORA)
-    assert resumo["contagem"]["abertos"] == 0 and resumo["contagem"]["falhas"] == 5  # 3 POST + 2 PATCH
+    assert resumo["contagem"]["abertos"] == 0 and resumo["contagem"]["falhas"] == 5
     assert estado.posts == []
     assert "HTTP 401" in arquivo_log.read_text(encoding="utf-8")

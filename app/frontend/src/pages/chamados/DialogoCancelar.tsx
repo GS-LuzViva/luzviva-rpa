@@ -4,18 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export interface DialogoCancelarProps {
-  /** Id do chamado a cancelar; null fecha o diálogo. */
   idChamado: string | null
   aoConfirmar: () => void
   aoVoltar: () => void
-  /** Ao fechar: devolve o foco a quem abriu (o diálogo abre por código, sem DialogTrigger). */
   aoDevolverFoco?: (evento: Event) => void
 }
 
-/** Confirmação antes de cancelar um chamado (status final, sem volta). Foco inicial em "Voltar". */
 export function DialogoCancelar({ idChamado, aoConfirmar, aoVoltar, aoDevolverFoco }: DialogoCancelarProps) {
   const voltar = useRef<HTMLButtonElement>(null)
-  // Guarda o último id para o texto não sumir durante a animação de saída.
   const [ultimoId, setUltimoId] = useState(idChamado)
   if (idChamado && idChamado !== ultimoId) setUltimoId(idChamado)
   const id = idChamado ?? ultimoId

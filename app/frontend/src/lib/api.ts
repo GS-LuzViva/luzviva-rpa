@@ -1,8 +1,3 @@
-/**
- * Camada HTTP do LuzViva: `pedir()` faz fetch com tempo limite, lê o JSON e transforma qualquer
- * falha em `ErroApi` com mensagem amigável em pt-BR (o que houve e o que fazer).
- * As funções `api.*` abaixo são as únicas que conhecem as rotas; os hooks usam só elas.
- */
 import type {
   AlteracaoChamado,
   Area,
@@ -19,7 +14,6 @@ import type {
   StatusChamado,
 } from "@/lib/tipos"
 
-/** Tempo limite padrão (15 s) e o das rotas lentas, foto e assistente (30 s). */
 export const TEMPO_PADRAO_MS = 15_000
 export const TEMPO_LONGO_MS = 30_000
 
@@ -37,14 +31,10 @@ const MENSAGENS_STATUS: Record<number, string> = {
   503: "Os dados desta tela ainda não foram publicados pelo processamento diário. Tente de novo mais tarde.",
 }
 
-/** Erro de qualquer chamada à API. `message` já vem pronta para mostrar ao usuário. */
 export class ErroApi extends Error {
-  /** Status HTTP; 0 quando não houve resposta (tempo esgotado ou sem conexão). */
   readonly status: number
   readonly tipo: TipoErroApi
-  /** Texto do `detail` do FastAPI, quando houver (já incluído em `message`). */
   readonly detalhe?: string
-  /** `detail` original, para quem precisa de um campo (ex.: `id_chamado` num 409). */
   readonly corpo?: unknown
 
   constructor(mensagem: string, opcoes: { status: number; tipo: TipoErroApi; detalhe?: string; corpo?: unknown }) {
@@ -57,7 +47,6 @@ export class ErroApi extends Error {
   }
 }
 
-/** Mensagem amigável para qualquer erro (ErroApi ou inesperado). */
 export function mensagemDeErro(erro: unknown): string {
   if (erro instanceof ErroApi) return erro.message
   return "Algo deu errado ao falar com o servidor. Tente de novo."
@@ -68,7 +57,6 @@ interface ErroValidacao {
   msg?: string
 }
 
-/** Converte o `detail` do FastAPI (texto, objeto ou lista de erros 422) em texto legível. */
 export function textoDetalhe(detail: unknown): string {
   if (detail === null || detail === undefined || detail === "") return ""
   if (typeof detail === "string") return detail
@@ -94,22 +82,13 @@ export function textoDetalhe(detail: unknown): string {
 
 export interface OpcoesPedido {
   metodo?: "GET" | "POST" | "PATCH" | "DELETE"
-  /** Corpo JSON (serializado aqui, com Content-Type). */
   json?: unknown
-  /** Corpo multipart (o navegador define o Content-Type). */
   formulario?: FormData
   cabecalhos?: Record<string, string>
-  /** Tempo limite em ms (padrão 15 s). */
   tempoMs?: number
-  /** Sinal externo (o TanStack Query cancela consultas por ele). */
   signal?: AbortSignal
 }
 
-/**
- * fetch com tempo limite e erro tipado. Devolve o JSON da resposta como `T`.
- * Lança `ErroApi` em erro HTTP, tempo esgotado ou falta de conexão. Cancelamento pelo `signal`
- * externo é repassado como o `AbortError` original (o TanStack Query sabe tratar).
- */
 export async function pedir<T>(caminho: string, opcoes: OpcoesPedido = {}): Promise<T> {
   const { metodo = "GET", json, formulario, cabecalhos = {}, tempoMs = TEMPO_PADRAO_MS, signal } = opcoes
   const controle = new AbortController()
@@ -182,7 +161,6 @@ export async function pedir<T>(caminho: string, opcoes: OpcoesPedido = {}): Prom
   }
 }
 
-/** Monta `?a=1&b=2` ignorando valores vazios. */
 function consulta(parametros: Record<string, string | undefined | null>): string {
   const busca = new URLSearchParams()
   for (const [chave, valor] of Object.entries(parametros)) {
@@ -192,7 +170,6 @@ function consulta(parametros: Record<string, string | undefined | null>): string
   return texto ? `?${texto}` : ""
 }
 
-/** Resposta usada quando o assistente falha por qualquer motivo (mesma forma da API). */
 export const ASSISTENTE_INDISPONIVEL: RespostaAssistente = {
   resposta: "Assistente indisponível no momento",
   fontes: [],
@@ -200,7 +177,6 @@ export const ASSISTENTE_INDISPONIVEL: RespostaAssistente = {
   confianca: 0,
 }
 
-/** Rotas da API. Caminhos relativos à origem (o FastAPI serve site e API juntos). */
 export const api = {
   luminarias(filtros: { area?: Area; situacao?: string; placa?: string } = {}, signal?: AbortSignal) {
     return pedir<Envelope<Luminaria>>(
@@ -253,7 +229,6 @@ export const api = {
     return pedir<Ocorrencia>("/api/fotos", { metodo: "POST", formulario, tempoMs: TEMPO_LONGO_MS })
   },
 
-  /** Nunca rejeita: qualquer falha vira `ASSISTENTE_INDISPONIVEL`, para a tela continuar de pé. */
   async perguntar(pergunta: Pergunta): Promise<RespostaAssistente> {
     try {
       const resposta = await pedir<Partial<RespostaAssistente> | null>("/api/assistente", {

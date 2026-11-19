@@ -18,7 +18,6 @@ function focarConteudo() {
   principal?.focus({ preventScroll: false })
 }
 
-/** Primeiro foco da página. Não usa a âncora (#conteudo) porque o HashRouter leria como rota. */
 function LinkPular() {
   const pular = (evento: MouseEvent<HTMLAnchorElement>) => {
     evento.preventDefault()
@@ -35,7 +34,6 @@ function LinkPular() {
   )
 }
 
-/** Barra superior do celular (< 768 px): botão do menu e a marca. */
 function BarraSuperior() {
   const { openMobile, setOpenMobile } = useSidebar()
   return (
@@ -46,7 +44,6 @@ function BarraSuperior() {
         aria-label="Abrir menu"
         aria-expanded={openMobile}
         aria-haspopup="dialog"
-        // O menu devolve o foco a este botão ao fechar (ver Sidebar em components/ui/sidebar).
         data-sidebar="trigger"
         onClick={() => setOpenMobile(true)}
         className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-sidebar-ring"
@@ -58,7 +55,6 @@ function BarraSuperior() {
   )
 }
 
-/** Título do documento e foco no conteúdo a cada troca de tela (não na carga inicial). */
 function useEfeitosDeRota() {
   const { pathname } = useLocation()
   const anterior = useRef(pathname)
@@ -73,7 +69,6 @@ function useEfeitosDeRota() {
   return pathname
 }
 
-/** Casca do app: link de pular, barra lateral, barra superior (celular) e `<main id="conteudo">`. */
 export function AppShell() {
   const pathname = useEfeitosDeRota()
   return (

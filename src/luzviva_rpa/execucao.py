@@ -19,7 +19,7 @@ CONTADORES = (
     "lidos", "abertos", "monitorar", "duplicados", "invalidos",
     "em_atendimento", "escalados", "concluidos", "falhas",
 )
-FALHAS_SEGUIDAS_PARA_ABORTAR = 3  # API fora no meio da fila: para e deixa para a próxima hora
+FALHAS_SEGUIDAS_PARA_ABORTAR = 3
 _CONTADOR_DA_ACAO = {"monitorar": "monitorar", "duplicado": "duplicados"}
 
 
@@ -34,7 +34,6 @@ class Execucao:
         self.erros: list[str] = []
         self.escalonamentos: list[dict] = []
 
-    # ------------------------------------------------------------ fase 1: fila
 
     def processar_fila(self) -> None:
         try:
@@ -60,14 +59,13 @@ class Execucao:
 
         vistas: set[str] = set()
         self._falhas_seguidas = 0
-        for posicao, item in enumerate(itens, start=1):  # repetição sobre a fila
+        for posicao, item in enumerate(itens, start=1):
             if self._falhas_seguidas >= FALHAS_SEGUIDAS_PARA_ABORTAR:
-                # API caiu no meio da fila: não gasta ~94 s por item; a próxima execução retoma.
                 log.error("fase fila interrompida: %d falhas seguidas ao abrir chamados; %d itens "
                           "ficam para a próxima execução", self._falhas_seguidas, len(itens) - posicao + 1)
                 break
             self.contagem["lidos"] += 1
-            decisao = regras.decidir_item(item, com_chamado, vistas)  # decisão
+            decisao = regras.decidir_item(item, com_chamado, vistas)
             placa = regras.placa_para_log(item)
             if decisao.acao == "invalido":
                 self.contagem["invalidos"] += 1
@@ -107,7 +105,6 @@ class Execucao:
         log.info("chamado aberto %s equipe=%s", ref, chamado["equipe"])
         return True
 
-    # ------------------------------------------------------------ fase 2: acompanhamento
 
     def acompanhar_chamados(self) -> None:
         try:
@@ -127,7 +124,7 @@ class Execucao:
                 por_placa.setdefault(lum["placa"], []).append(lum)
         log.info("acompanhamento: %d chamados abertos ou em atendimento", len(chamados))
 
-        for chamado in chamados:  # repetição sobre os chamados
+        for chamado in chamados:
             try:
                 decisao = regras.decidir_chamado(chamado, por_placa.get(chamado.get("placa"), []),
                                                  self.agora)
@@ -135,7 +132,7 @@ class Execucao:
                 self.contagem["falhas"] += 1
                 log.warning("chamado inconsistente id=%s: %s", chamado.get("id_chamado"), exc)
                 continue
-            if decisao.escalar:  # alerta local: sai mesmo se o PATCH abaixo falhar
+            if decisao.escalar:
                 self._escalar(chamado, decisao)
             if decisao.acao == "concluir":
                 self._atualizar(chamado, {"status": "concluido", "concluido_em": decisao.concluido_em},

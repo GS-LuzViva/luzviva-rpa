@@ -1,4 +1,3 @@
-# App LuzViva: API FastAPI + site (o build do React já está em static/, então a imagem não precisa de Node).
 FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -17,7 +16,6 @@ COPY app/ app/
 COPY data/ data/
 COPY static/ static/
 
-# Usuário sem privilégio; o estado (arquivos do dia, banco de chamados, fotos) fica num volume.
 RUN useradd --system --uid 10001 luzviva \
     && mkdir -p /srv/estado/dados_dia /srv/estado/fotos \
     && chown -R luzviva /srv/estado

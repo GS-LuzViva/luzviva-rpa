@@ -1,10 +1,8 @@
-# Roda o robô de hora em hora contra o MVP publicado na AWS e guarda os logs como evidência.
-# Também pode ser disparado à mão em Actions > rpa-agendado > Run workflow.
 name: rpa-agendado
 
 on:
   schedule:
-    - cron: "17 * * * *"   # de hora em hora (UTC), fora do minuto 0 para evitar fila
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:

@@ -11,23 +11,15 @@ const TAMANHOS: Record<TamanhoPlaca, string> = {
 }
 
 export interface PlacaChipProps {
-  /** Placa ILUME (ex.: "IP0723371"). null ou vazio mostra "sem placa". */
   placa: string | null | undefined
-  /** sm: tabelas e listas; md: detalhes; lg: prévia ao vivo do formulário de relato. */
   size?: TamanhoPlaca
-  /** Rota interna (react-router, ex.: "/fila?area=SE") para a placa virar link. */
   to?: string
-  /** URL externa ou âncora para a placa virar link (prefira `to` para telas do app). */
   href?: string
-  /**
-   * Completa os algarismos que faltam com traços apagados, para a prévia ao vivo
-   * ("IP07" aparece como "IP07_____"). O texto lido pelo leitor de tela continua o digitado.
-   */
   completar?: boolean
   className?: string
 }
 
-const TAMANHO_PLACA = 9 // "IP" + 7 algarismos
+const TAMANHO_PLACA = 9
 
 function Conteudo({ texto, completar }: { texto: string; completar: boolean }): ReactNode {
   const prefixo = texto.slice(0, 2)
@@ -44,11 +36,6 @@ function Conteudo({ texto, completar }: { texto: string; completar: boolean }): 
   )
 }
 
-/**
- * Miniatura da placa pintada no poste (elemento-assinatura do DESIGN.md): algarismos condensados
- * em negrito, preto sobre amarelo, borda fina e canto quase reto. O leitor de tela lê
- * "Placa IP0723371". Use em toda placa da interface.
- */
 export function PlacaChip({ placa, size = "sm", to, href, completar = false, className }: PlacaChipProps) {
   const texto = (placa ?? "").trim().toUpperCase()
 
@@ -74,8 +61,6 @@ export function PlacaChip({ placa, size = "sm", to, href, completar = false, cla
       : "select-all",
     className,
   )
-  // aria-label no próprio elemento: o leitor de tela diz "Placa IP0723371" e copiar o texto
-  // continua dando só "IP0723371".
   const rotulo = texto ? `Placa ${texto}` : "Placa ainda não informada"
   const visual = <Conteudo texto={completar ? texto || "IP" : texto} completar={completar} />
 

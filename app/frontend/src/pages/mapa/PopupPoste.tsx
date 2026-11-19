@@ -10,10 +10,8 @@ import type { Area } from "@/lib/tipos"
 
 import type { Poste } from "./postes"
 
-/** Marca o título do popup, que recebe o foco quando o poste é aberto pela lista no celular. */
 export const ATRIBUTO_FOCO_POPUP = "data-foco-popup"
 
-/** Conteúdo do popup de um poste (React, sem HTML em texto). */
 export function PopupPoste({ poste, area }: { poste: Poste; area: Area }) {
   const parametrosRelato = new URLSearchParams({ area })
   if (poste.placa) parametrosRelato.set("placa", poste.placa)
@@ -23,7 +21,6 @@ export function PopupPoste({ poste, area }: { poste: Poste; area: Area }) {
 
   return (
     <div className="flex w-64 max-w-full flex-col gap-3 text-popover-foreground max-[359px]:w-56">
-      {/* pr-8: espaço do X (44 px no toque). */}
       <h2
         tabIndex={-1}
         {...atributoFoco}
@@ -35,7 +32,6 @@ export function PopupPoste({ poste, area }: { poste: Poste; area: Area }) {
         </span>
       </h2>
 
-      {/* Abaixo de 360 px os rótulos ficam em 13 px numa linha só: o popup cabe no mapa de 320 × 568. */}
       <dl className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-1.5 text-sm max-[359px]:[&_dt]:text-xs max-[359px]:[&_dt]:whitespace-nowrap">
         <dt className="text-muted-foreground">Situação</dt>
         <dd>

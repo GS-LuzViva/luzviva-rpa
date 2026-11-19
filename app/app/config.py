@@ -7,10 +7,10 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class Config:
-    data: Path  # views do pipeline (somente leitura)
-    dia: Path  # arquivos do dia (medições, ocorrências, chamados)
-    db: Path  # SQLite com o estado atual dos chamados
-    fotos: Path  # fotos do cidadão já sem EXIF
+    data: Path
+    dia: Path
+    db: Path
+    fotos: Path
     api_token: str
     cors: list[str]
     ia_url: str

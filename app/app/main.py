@@ -26,7 +26,7 @@ log = logging.getLogger("luzviva")
 VIEWS = ("vw_mvp_mapa_luminarias", "vw_mvp_fila_manutencao", "vw_mvp_painel_subprefeitura")
 SITE = Path(__file__).resolve().parent.parent / "static"
 LIMITE_FOTO = 5 * 1024 * 1024
-LIMITE_PIXELS = 40_000_000  # ~40 MP cobre câmera de celular; acima disso é bomba de descompressão
+LIMITE_PIXELS = 40_000_000
 TIMEOUT_SERVICOS = 20
 ASSISTENTE_INDISPONIVEL = {"resposta": "Assistente indisponível no momento", "fontes": [], "recusou": True, "confianca": 0}
 
@@ -81,7 +81,6 @@ def luminarias(cfg: Cfg, subprefeitura: str | None = None, situacao: str | None 
 @rotas.get("/api/fila")
 def fila(cfg: Cfg, repo: Chamados, subprefeitura: str | None = None):
     view = _filtrar(_ler_view(cfg, "vw_mvp_fila_manutencao"), subprefeitura=subprefeitura)
-    # O pipeline roda 1x/dia; o estado do chamado vem do banco, que é o atual.
     abertos = repo.abertos_por_placa()
     for linha in view["dados"]:
         chamado = abertos.get(linha.get("placa"))
@@ -104,12 +103,8 @@ def nova_medicao(medicao: Medicao, cfg: Cfg, response: Response):
     return {"ok": True, "id": medicao.id_medicao}
 
 
-# Rota da integração de visão (lote): a ocorrência chega pronta, com confiança e modelo, e pesa na
-# prioridade da fila. Por isso exige a mesma chave das outras rotas de máquina. O cidadão usa
-# /api/fotos, que fica aberta e calcula a visão no servidor.
 @rotas.post("/api/ocorrencias", status_code=201, dependencies=[Depends(exigir_token)])
 def nova_ocorrencia(ocorrencia: Ocorrencia, cfg: Cfg, response: Response):
-    # `cidadao` não faz parte do modelo, então nunca chega ao arquivo do dia.
     if not armazenamento.anexar(cfg.dia, "ocorrencias_app", "id_ocorrencia", ocorrencia.model_dump(mode="json")):
         response.status_code = 200
         return {"ok": True, "id": ocorrencia.id_ocorrencia, "duplicado": True}
@@ -133,7 +128,6 @@ def _detectar(visao_url: str, foto_id: str, jpeg: bytes) -> dict:
         return {}
     if isinstance(resultado.get("placa"), str):
         resultado["placa"] = resultado["placa"].strip().upper()
-    # Campo inválido da visão é ignorado (cai no que o cidadão informou) em vez de perder o relato.
     return {campo: resultado[campo] for campo, tipo in _CAMPOS_VISAO.items()
             if resultado.get(campo) is not None and _valido(tipo, resultado[campo])}
 
@@ -181,7 +175,6 @@ def nova_foto(
             raise HTTPException(415, "envie uma foto JPEG ou PNG")
         if imagem.width * imagem.height > LIMITE_PIXELS:
             raise HTTPException(413, "foto com resolução grande demais")
-        # Reencodar sem passar `exif` remove EXIF e GPS; exif_transpose mantém a orientação.
         imagem = ImageOps.exif_transpose(imagem).convert("RGB")
         saida = io.BytesIO()
         imagem.save(saida, "JPEG", quality=85)
@@ -192,8 +185,6 @@ def nova_foto(
     foto_id = secrets.token_hex(8)
     visao = _detectar(cfg.visao_url, foto_id, jpeg)
     placa = (visao.get("placa") or placa or "").strip().upper() or None
-    # A placa é a ligação confiável (postes a 12,7 m): o cadastro dá a área (o seletor do site vem
-    # com SE por padrão) e completa a coordenada quando o cidadão não compartilhou localização.
     poste = _poste_por_placa(cfg, placa) if placa else None
     if poste:
         area_piloto = poste.get("subprefeitura") or area_piloto
@@ -303,13 +294,11 @@ def criar_app() -> FastAPI:
         app.add_middleware(CORSMiddleware, allow_origins=cfg.cors, allow_methods=["*"], allow_headers=["*"])
     app.include_router(rotas)
     Instrumentator().instrument(app).expose(app)
-    if SITE.is_dir():  # o site é montado por último para não esconder as rotas da API
+    if SITE.is_dir():
         app.mount("/", StaticFiles(directory=SITE, html=True), name="site")
 
         @app.middleware("http")
         async def cache_do_site(request: Request, call_next):
-            # index.html sempre revalida (aponta para os arquivos do build atual);
-            # os arquivos de assets/ têm hash no nome, então podem ficar em cache para sempre.
             resposta = await call_next(request)
             caminho = request.url.path
             if caminho.startswith("/assets/"):

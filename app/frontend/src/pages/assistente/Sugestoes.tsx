@@ -3,11 +3,6 @@ import { cn } from "@/lib/utils"
 
 import type { Sugestao } from "./conversa"
 
-/**
- * O texto da sugestão com a placa desenhada como PlacaChip no meio da frase. A placa desenhada fica
- * escondida do leitor de tela (senão o nome do botão viraria "Por que a Placa IP0699800…"); o nome do
- * botão vem do `aria-label` com a frase exata que será enviada.
- */
 function TextoSugestao({ sugestao }: { sugestao: Sugestao }) {
   if (!sugestao.placa) return <>{sugestao.texto}</>
   const [antes, depois = ""] = sugestao.texto.split(sugestao.placa)
@@ -30,7 +25,6 @@ interface SugestoesProps {
   className?: string
 }
 
-/** Perguntas prontas: um toque preenche e envia. */
 export function Sugestoes({ sugestoes, aoEscolher, desabilitado, titulo, className }: SugestoesProps) {
   return (
     <div role="group" aria-labelledby="assistente-sugestoes-titulo" className={cn("flex flex-col gap-2", className)}>

@@ -17,7 +17,6 @@ export interface DetalheLuminariaProps {
   item: ItemFila | null
   aberto: boolean
   aoMudarAberto: (aberto: boolean) => void
-  /** Quando a fila foi gerada pelo processamento diário (para explicar diferença de soma). */
   geradoEm?: string
 }
 
@@ -65,7 +64,6 @@ function Prioridade({ item, geradoEm }: { item: ItemFila; geradoEm?: string }) {
   )
 }
 
-/** Painel lateral com os detalhes de uma luminária da fila e as ações "Ver no mapa" e "Perguntar ao assistente". */
 export function DetalheLuminaria({ item, aberto, aoMudarAberto, geradoEm }: DetalheLuminariaProps) {
   const endereco = item ? formatarEndereco(item.endereco) : null
   const confianca = item ? confiancaVisao(item) : null
@@ -79,7 +77,6 @@ export function DetalheLuminaria({ item, aberto, aoMudarAberto, geradoEm }: Deta
         side="right"
         className="gap-0 data-[side=right]:w-full data-[side=right]:sm:max-w-md"
         onCloseAutoFocus={(evento) => {
-          // Aberto sem SheetTrigger: devolve o foco ao botão da luminária na tabela ou na lista.
           const origem = item && document.querySelector<HTMLElement>(`[data-luminaria="${item.id_luminaria}"]`)
           if (origem) {
             evento.preventDefault()

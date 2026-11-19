@@ -15,7 +15,7 @@ def test_gera_views_do_contrato(tmp_path):
         "vw_mvp_fila_manutencao.json", "vw_mvp_mapa_luminarias.json", "vw_mvp_painel_subprefeitura.json"]
 
     mapa = views["vw_mvp_mapa_luminarias"]
-    assert set(mapa) == {"view", "gerado_em", "linhas", "dados"}  # sem chave "simulado"
+    assert set(mapa) == {"view", "gerado_em", "linhas", "dados"}
     assert list(mapa["dados"][0]) == ["id_luminaria", "placa", "endereco", "subprefeitura", "lat", "lon",
                                       "ultima_medicao", "ultimo_lux", "situacao", "ocorrencias_app"]
     for linha in mapa["dados"]:
@@ -33,7 +33,7 @@ def test_gera_views_do_contrato(tmp_path):
 
     painel = views["vw_mvp_painel_subprefeitura"]["dados"]
     assert [p["subprefeitura"] for p in painel] == ["SE", "PINHEIROS", "CAMPO LIMPO"]
-    assert painel[0]["luminarias_cadastradas"] == 17035  # total real de _coleta.pontos_por_area
+    assert painel[0]["luminarias_cadastradas"] == 17035
 
 
 def test_gerador_e_deterministico(tmp_path):

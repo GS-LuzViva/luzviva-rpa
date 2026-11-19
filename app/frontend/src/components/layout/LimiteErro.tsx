@@ -6,10 +6,6 @@ interface Estado {
   erro: unknown
 }
 
-/**
- * Segura erro de render (ou falha ao baixar o pedaço da página) para o resto do app continuar
- * de pé. Use com `key` da rota para zerar ao trocar de tela.
- */
 export class LimiteErro extends Component<{ children: ReactNode }, Estado> {
   state: Estado = { erro: null }
 

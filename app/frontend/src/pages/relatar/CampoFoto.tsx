@@ -13,10 +13,6 @@ interface CampoFotoProps {
   desabilitado?: boolean
 }
 
-/**
- * Miniatura por object URL: criado quando a pessoa escolhe a foto, revogado na troca e ao desmontar
- * (o formulário remonta em "Relatar outro poste").
- */
 function useMiniatura() {
   const [url, setUrl] = useState<string | null>(null)
   const atual = useRef<string | null>(null)
@@ -35,10 +31,6 @@ function useMiniatura() {
   return [url, trocar] as const
 }
 
-/**
- * Foto do poste: área grande de toque (abre a câmera traseira no celular) e, depois de escolhida,
- * a miniatura com "Trocar foto". O input fica visualmente escondido, mas é ele que recebe o foco.
- */
 export function CampoFoto({ id, foto, erro, aoEscolher, inputRef, desabilitado }: CampoFotoProps) {
   const [url, trocarMiniatura] = useMiniatura()
   const [semMiniatura, setSemMiniatura] = useState(false)
@@ -48,7 +40,6 @@ export function CampoFoto({ id, foto, erro, aoEscolher, inputRef, desabilitado }
 
   const escolher = (evento: ChangeEvent<HTMLInputElement>) => {
     const arquivo = evento.target.files?.[0] ?? null
-    // Limpa o valor para que escolher o mesmo arquivo de novo também dispare o change.
     evento.target.value = ""
     if (!arquivo) return
     const problema = erroDaFoto(arquivo)
@@ -57,7 +48,6 @@ export function CampoFoto({ id, foto, erro, aoEscolher, inputRef, desabilitado }
     aoEscolher(problema ? null : arquivo, problema)
   }
 
-  // O input escondido recebe o foco; o anel aparece no rótulo visível que o representa.
   const anelDeFoco =
     "group-has-[input:focus-visible]/foto:border-ring group-has-[input:focus-visible]/foto:ring-3 group-has-[input:focus-visible]/foto:ring-ring"
 
@@ -70,7 +60,6 @@ export function CampoFoto({ id, foto, erro, aoEscolher, inputRef, desabilitado }
         Enquadre a luminária e, se der, a placa amarela. JPEG ou PNG de até 5 MB.
       </p>
 
-      {/* Um único input: a área grande (sem foto) e o "Trocar foto" (com foto) são rótulos dele. */}
       <input
         ref={inputRef}
         id={id}

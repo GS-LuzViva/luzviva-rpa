@@ -24,7 +24,6 @@ import { ListaFalhas } from "./mapa/ListaFalhas"
 import { MapaLuminarias, type PedidoFoco } from "./mapa/MapaLuminarias"
 import { agruparPostes, contagemVazia, ordenarParaDesenho, postesComFalha, type Contagem, type Poste } from "./mapa/postes"
 
-/** "Placa IP0723371 aberta no mapa: Rua da Gloria." (anúncio para leitor de tela). */
 function textoAberto(poste: Poste): string {
   const placa = poste.placa ? `Placa ${poste.placa}` : "Poste sem placa"
   const endereco = formatarEndereco(poste.endereco)
@@ -36,14 +35,12 @@ function frase(n: number, situacao: Situacao): string {
   return `${formatarNumero(n, 0)} ${n === 1 ? um : varios}`
 }
 
-/** "Mapa de Sé: 600 luminárias, 11 apagadas, 19 insuficientes, 570 ok e 0 sem medição." */
 function rotuloDoMapa(nome: string, total: number, contagem: Contagem): string {
   const partes = ORDEM_LEGENDA.map((s) => frase(contagem[s], s))
   const ultima = partes.pop()
   return `Mapa das luminárias de ${nome}: ${formatarNumero(total, 0)} luminárias, ${partes.join(", ")} e ${ultima}.`
 }
 
-/** Texto curto acima da lista: "30 luminárias apagadas ou insuficientes em 12 postes." */
 function resumoFalhas(postes: readonly Poste[]): string {
   if (postes.length === 0) return "Nenhuma falha nesta área."
   const luminarias = postes.reduce((soma, p) => soma + p.luminarias, 0)
@@ -64,11 +61,7 @@ export default function Mapa() {
 
   const mapaRef = useRef<MapaLeaflet>(null)
   const regiaoMapaRef = useRef<HTMLDivElement>(null)
-  // Link vindo de outra tela ("Ver no mapa"): `#/?area=SE&placa=IP0723371` abre aquele poste.
-  // O pedido fica guardado aqui porque a placa sai da URL assim que os dados chegam.
   const [pedido, setPedido] = useState(() => (placaPedida ? { area, placa: placaPedida } : null))
-  // undefined = ninguém escolheu nada ainda (vale o pedido do link). A seleção vale só para a
-  // área em que foi feita: trocar de área fecha o popup.
   const [selecao, setSelecao] = useState<{ area: string; id: string } | null | undefined>(undefined)
   if (placaPedida && (pedido?.placa !== placaPedida || pedido.area !== area)) {
     setPedido({ area, placa: placaPedida })
@@ -86,7 +79,6 @@ export default function Mapa() {
   const visiveis = useMemo(() => new Set(SITUACOES.filter((s) => !ocultas.has(s))), [ocultas])
   const alvoPedido = useMemo(() => {
     if (!pedido || pedido.area !== area) return null
-    // A mesma placa pode ter luminárias em situações diferentes: abre a pior.
     return [...falhas, ...postes].find((p) => p.placa === pedido.placa) ?? null
   }, [pedido, area, falhas, postes])
   const selecionadoId =
@@ -107,15 +99,9 @@ export default function Mapa() {
   }, [])
 
   const [pedidoFoco, setPedidoFoco] = useState<PedidoFoco | null>(null)
-  // Anúncio educado para leitor de tela quando a lista ao lado abre um poste (o foco fica na lista).
   const [anuncio, setAnuncio] = useState("")
-  // Celular: poste escolhido na folha da lista, aberto só depois que a folha termina de fechar.
   const posteDaFolha = useRef<Poste | null>(null)
 
-  /**
-   * Mostra a situação do poste (se estava escondida), abre o popup e pede ao mapa para centralizar
-   * nele com o popup inteiro à vista. `moverFoco` leva o foco para o popup.
-   */
   const focar = useCallback(
     (poste: Poste, moverFoco = false) => {
       setOcultas((atuais) => {
@@ -135,7 +121,6 @@ export default function Mapa() {
       if (telaLarga) {
         focar(poste)
         const texto = textoAberto(poste)
-        // Mesmo poste de novo: muda o texto para o leitor de tela anunciar outra vez.
         setAnuncio((atual) => (atual === texto ? `${texto} ` : texto))
         return
       }
@@ -145,11 +130,10 @@ export default function Mapa() {
     [focar, telaLarga],
   )
 
-  /** A folha da lista fechou (animação terminada): abre o poste escolhido e leva o foco ao popup. */
   const aoFecharFolha = useCallback(
     (evento: Event) => {
       const poste = posteDaFolha.current
-      if (!poste) return // fechou sem escolher: o foco volta ao botão "Ver lista de falhas"
+      if (!poste) return
       posteDaFolha.current = null
       evento.preventDefault()
       regiaoMapaRef.current?.scrollIntoView({ block: "nearest", behavior: movimentoReduzido ? "auto" : "smooth" })
@@ -158,7 +142,6 @@ export default function Mapa() {
     [focar, movimentoReduzido],
   )
 
-  // Com os dados da área carregados, a placa sai da URL (o pedido já foi guardado).
   const dadosProntos = Boolean(consulta.data)
   useEffect(() => {
     if (!placaPedida || !dadosProntos) return
@@ -252,7 +235,6 @@ export default function Mapa() {
                 aoAlternar={alternarSituacao}
                 className={cn(
                   "absolute right-2 bottom-7 left-2 z-10 sm:right-auto sm:bottom-3 sm:left-3 sm:max-w-[calc(100%-1.5rem)]",
-                  // No celular o popup precisa do mapa inteiro: a legenda volta quando ele fecha.
                   selecionado && "max-sm:hidden",
                 )}
               />
@@ -261,7 +243,6 @@ export default function Mapa() {
         </div>
 
         {telaLarga && (
-          // section, não aside: dentro do <main>, um complementary seria um landmark fora do topo.
           <section
             aria-labelledby="lista-falhas-titulo"
             className="flex min-h-0 w-[22.5rem] shrink-0 flex-col overflow-hidden rounded-xl border bg-card"

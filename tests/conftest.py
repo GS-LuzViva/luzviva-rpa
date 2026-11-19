@@ -39,9 +39,9 @@ class FakeCliente:
         self.fila = envelope([]) if fila is None else fila
         self.chamados = list(chamados or [])
         self.luminarias = envelope(list(luminarias or []), "vw_mvp_mapa_luminarias")
-        self.erros = dict(erros or {})        # nome do método -> exceção a levantar
-        self.post_409 = set(post_409)         # placas que recebem 409
-        self.post_falha = dict.fromkeys(post_falha)  # placas cujo POST falha
+        self.erros = dict(erros or {})
+        self.post_409 = set(post_409)
+        self.post_falha = dict.fromkeys(post_falha)
         self.posts: list[dict] = []
         self.patches: list[tuple[str, dict]] = []
 

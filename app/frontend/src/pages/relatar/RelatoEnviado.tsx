@@ -23,7 +23,6 @@ function Linha({ rotulo, children }: { rotulo: string; children: ReactNode }) {
   )
 }
 
-/** Confirmação que substitui o formulário: o que foi registrado e o que a visão achou da foto. */
 export function RelatoEnviado({ ocorrencia, aoRelatarOutro }: RelatoEnviadoProps) {
   const refTitulo = useRef<HTMLHeadingElement>(null)
   useEffect(() => {

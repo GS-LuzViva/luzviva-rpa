@@ -1,9 +1,5 @@
 import { cn } from "@/lib/utils"
 
-/**
- * Marca do LuzViva: uma plaquinha amarela (como a placa ILUME do poste) com "LV" e o nome.
- * Desenhada em CSS, sem imagem. O amarelo só aparece aqui e na PlacaChip.
- */
 export function MarcaLuzViva({ compacta = false, className }: { compacta?: boolean; className?: string }) {
   return (
     <span className={cn("flex items-center gap-2.5", className)}>

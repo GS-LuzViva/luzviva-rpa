@@ -3,12 +3,10 @@ import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface BaseEsqueleto {
-  /** Texto para leitor de tela. Padrão "Carregando…". */
   rotulo?: string
   className?: string
 }
 
-/** Carregamento de tabela: cabeçalho + linhas cinza no lugar das células. */
 export function EsqueletoTabela({
   linhas = 8,
   colunas = 6,
@@ -36,7 +34,6 @@ export function EsqueletoTabela({
   )
 }
 
-/** Carregamento do Painel: uma linha por área (número grande + barra + indicadores). */
 export function EsqueletoPainel({ linhas = 3, rotulo = "Carregando…", className }: BaseEsqueleto & { linhas?: number }) {
   return (
     <div role="status" aria-live="polite" className={cn("flex flex-col rounded-xl border bg-card", className)}>
@@ -59,7 +56,6 @@ export function EsqueletoPainel({ linhas = 3, rotulo = "Carregando…", classNam
   )
 }
 
-/** Carregamento genérico de bloco (mapa, cartão de detalhe). */
 export function EsqueletoBloco({ rotulo = "Carregando…", className }: BaseEsqueleto) {
   return (
     <div role="status" aria-live="polite" className={cn("relative", className)}>

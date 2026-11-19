@@ -15,7 +15,7 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 AREAS = ("SE", "PINHEIROS", "CAMPO LIMPO")
-LIMITES_SP = (-24.01, -23.35, -46.83, -46.36)  # lat mín, lat máx, lon mín, lon máx do município
+LIMITES_SP = (-24.01, -23.35, -46.83, -46.36)
 RAIO_M = 30
 CATEGORIAS_FALHA = ("luminaria_apagada", "luminaria_piscando")
 ABERTOS = ("aberto", "em_atendimento")
@@ -74,7 +74,6 @@ def envelope(view: str, gerado_em: str, dados: list[dict]) -> dict:
 
 
 def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
-    # Cadastro ILUME (os dois arquivos diários são o mesmo recorte; a chave é o id)
     envelopes_lum = ler_fonte(amostras, "luminarias")
     pontos_por_area = envelopes_lum[-1]["_coleta"].get("pontos_por_area", {})
     cadastro = ultimo_por_chave([r for e in envelopes_lum for r in e["dados"]], "cd_identificador_iluminacao_publica")
@@ -90,7 +89,6 @@ def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
     for l in luminarias:
         por_placa.setdefault(l["placa"], []).append(l)
 
-    # Prata: limpeza
     medicoes = [
         m for m in ultimo_por_chave([r for e in ler_fonte(amostras, "medicoes_robo") for r in e["dados"]], "id_medicao")
         if m.get("lux") is not None and m["lux"] >= 0 and dentro_de_sp(m) and noturna(m["data_hora"])
@@ -102,7 +100,6 @@ def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
     ]
     chamados = ultimo_por_chave([r for e in ler_fonte(amostras, "chamados_rpa") for r in e["dados"]], "id_chamado")
 
-    # Ligação com a luminária
     ultima_medicao: dict[int, dict] = {}
     for m in medicoes:
         for l in ligar(m, por_placa, luminarias):
@@ -117,7 +114,6 @@ def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
             if o["categoria"] in CATEGORIAS_FALHA and o.get("confianca_visao") is not None:
                 confianca_max[l["id_luminaria"]] = max(confianca_max.get(l["id_luminaria"], 0), o["confianca_visao"])
 
-    # Ouro: mapa
     mapa = []
     for l in luminarias:
         m = ultima_medicao.get(l["id_luminaria"])
@@ -129,10 +125,9 @@ def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
             "ocorrencias_app": n_ocorrencias.get(l["id_luminaria"], 0),
         })
 
-    # Ouro: fila
     chamado_aberto: dict[str, dict] = {}
     for c in sorted((c for c in chamados if c["status"] in ABERTOS), key=lambda c: c["aberto_em"]):
-        chamado_aberto[c["placa"]] = c  # o aberto mais recente vence
+        chamado_aberto[c["placa"]] = c
     fila = []
     for linha in mapa:
         confianca = confianca_max.get(linha["id_luminaria"], 0)
@@ -152,7 +147,6 @@ def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
         })
     fila.sort(key=lambda f: (-f["prioridade"], f["id_luminaria"]))
 
-    # Ouro: painel
     painel = []
     for area in AREAS:
         da_area = [l for l in mapa if l["subprefeitura"] == area]
@@ -174,7 +168,6 @@ def gerar(amostras: Path, saida: Path) -> dict[str, dict]:
             "chamados_em_aberto": sum(1 for c in chamados if c["area_piloto"] == area and c["status"] in ABERTOS),
         })
 
-    # gerado_em = instante do registro mais recente das amostras (não o relógio), para ser determinístico
     gerado_em = max([m["data_hora"] for m in medicoes] + [o["data_hora"] for o in ocorrencias]
                     + [c["atualizado_em"] for c in chamados])
     views = {

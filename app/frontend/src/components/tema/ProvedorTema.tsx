@@ -10,7 +10,6 @@ import {
   type PreferenciaTema,
 } from "@/lib/tema"
 
-/** Guarda a preferência de tema, aplica no <html> e segue o sistema quando a preferência é "sistema". */
 export function ProvedorTema({ children }: { children: ReactNode }) {
   const [preferencia, setPreferencia] = useState<PreferenciaTema>(lerPreferencia)
   const [tema, setTema] = useState(() => resolverTema(preferencia))

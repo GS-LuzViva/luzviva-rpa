@@ -37,7 +37,6 @@ function textoResumo(total: number, atrasados: number): string {
   return `${base}, ${formatarNumero(atrasados, 0)} ${atrasados === 1 ? "atrasado" : "atrasados"}`
 }
 
-/** Elemento com o foco agora (null se for o <body>). */
 function elementoFocado(): HTMLElement | null {
   const ativo = document.activeElement
   return ativo instanceof HTMLElement && ativo !== document.body ? ativo : null
@@ -47,7 +46,6 @@ function focarAbaAtiva(lista: HTMLElement | null) {
   lista?.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.focus()
 }
 
-/** Botão do cabeçalho: diz se há chave nesta aba (sem mostrá-la) e abre o diálogo para informar ou remover. */
 function BotaoChave({ temChave, aoAbrir }: { temChave: boolean; aoAbrir: () => void }) {
   return (
     <Button variant="outline" onClick={aoAbrir} aria-haspopup="dialog" className="bg-card max-sm:w-full">
@@ -82,11 +80,8 @@ export default function Chamados() {
     aberto: false,
     motivo: "manual",
   })
-  /** Troca recusada com 401, esperando a chave. */
   const pendente = useRef<TrocaPendente | null>(null)
-  /** Troca a refazer assim que a chave nova chegar ao useMutation. */
   const repetir = useRef<TrocaPendente | null>(null)
-  /** Controle que abriu o último pedido ("Atualizar status" da linha ou "Chave do gestor"). */
   const retornoFoco = useRef<HTMLElement | null>(null)
   const refAbas = useRef<HTMLDivElement>(null)
 
@@ -130,7 +125,6 @@ export default function Chamados() {
             toast.error(`Não foi possível atualizar o status do chamado ${chamado.id_chamado}`, {
               description: mensagemDeErro(erro),
             })
-            // 409/404: a lista está velha (outra pessoa ou o robô mudou o chamado). Busca de novo.
             if (erro instanceof ErroApi && (erro.status === 409 || erro.status === 404)) void recarregar()
           },
         },
@@ -139,8 +133,6 @@ export default function Chamados() {
     [atualizar, chave, recarregar],
   )
 
-  // Depois de salvar a chave pedida por um 401, refaz a troca que estava esperando. Roda quando a
-  // chave muda e depois do efeito do useMutation (declarado antes), então a mutação já usa a chave nova.
   useEffect(() => {
     const troca = repetir.current
     if (!troca || !chave) return
@@ -148,8 +140,6 @@ export default function Chamados() {
     enviar(troca.chamado, troca.status)
   }, [chave, enviar])
 
-  // Os diálogos abrem por código (sem DialogTrigger): ao fechar, o foco volta ao controle que os abriu
-  // ou, se a linha saiu da lista, à aba atual.
   const devolverFoco = (evento: Event) => {
     evento.preventDefault()
     const alvo = retornoFoco.current
@@ -157,8 +147,6 @@ export default function Chamados() {
     else focarAbaAtiva(refAbas.current)
   }
 
-  // Depois de uma troca, a linha pode sair da aba (ex.: concluído em "Em aberto") e levar o foco junto:
-  // nesse caso o foco vai para a aba atual em vez de cair no <body>.
   useEffect(() => {
     const alvo = retornoFoco.current
     if (!alvo || alvo.isConnected || document.activeElement !== document.body) return
@@ -243,7 +231,6 @@ export default function Chamados() {
 
       <Tabs value={aba} onValueChange={trocarAba} className="gap-4">
         <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between">
-          {/* No celular as quatro abas viram uma grade 2 x 2: nada rola na horizontal. */}
           <TabsList
             ref={refAbas}
             aria-label="Status dos chamados"
@@ -253,7 +240,6 @@ export default function Chamados() {
                 <TabsTrigger key={item.valor} value={item.valor} className="px-3 max-md:h-11">
                   {item.rotulo}
                   {consulta.isSuccess && (
-                    // Herda a cor da aba (muted na inativa, foreground na ativa): >= 5:1 nos dois temas.
                     <span className="text-xs font-normal tabular-nums">
                       <span className="sr-only">, </span>
                       {formatarNumero(contagens[item.valor], 0)}

@@ -13,11 +13,9 @@ interface CampoLocalizacaoProps {
   desabilitado?: boolean
 }
 
-/** 4 casas decimais (cerca de 11 m): aproximada, suficiente para a equipe achar o poste. */
 const arredondar = (valor: number) => Math.round(valor * 10_000) / 10_000
 const formato4 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 4, maximumFractionDigits: 4 })
 
-/** Localização opcional: pede ao navegador só quando a pessoa toca no botão. */
 export function CampoLocalizacao({ localizacao, aoMudar, desabilitado }: CampoLocalizacaoProps) {
   const [estado, setEstado] = useState<EstadoGeo>("parado")
   const suportada = typeof navigator !== "undefined" && "geolocation" in navigator

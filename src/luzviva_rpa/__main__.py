@@ -33,7 +33,7 @@ def rodar_uma_vez(cliente: ApiCliente, cfg: Config, simular: bool) -> int:
     """Uma execução. Código de saída: 0 tudo certo, 1 houve falha ou erro de fase."""
     try:
         resumo = executar(cliente, cfg.dir_saida, simular=simular)
-    except Exception:  # última rede de proteção: o agendador nunca vê o robô cair calado
+    except Exception:
         log.exception("erro inesperado na execução")
         return 1
     return 1 if resumo["erros"] or resumo["contagem"]["falhas"] else 0
@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
         return rodar_uma_vez(cliente, cfg, args.simular)
     try:
         while True:
-            configurar_logs(cfg.dir_logs)  # troca de arquivo quando vira o dia
+            configurar_logs(cfg.dir_logs)
             rodar_uma_vez(cliente, cfg, args.simular)
             log.info("próxima execução em %d s", args.intervalo)
             time.sleep(args.intervalo)

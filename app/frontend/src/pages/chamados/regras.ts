@@ -1,4 +1,3 @@
-/** Abas, ordem e prazo dos chamados (só desta tela). */
 import { STATUS_EM_ABERTO } from "@/lib/dominio"
 import { calcularPrazo, type Prazo } from "@/lib/formatar"
 import type { Chamado, StatusChamado } from "@/lib/tipos"
@@ -8,9 +7,7 @@ export type Aba = "em_aberto" | "concluidos" | "cancelados" | "todos"
 export interface DefinicaoAba {
   valor: Aba
   rotulo: string
-  /** Status mostrados na aba (vazio = todos). */
   status: readonly StatusChamado[]
-  /** Texto do estado vazio ("Nenhum chamado em aberto nesta área"). */
   vazio: string
 }
 
@@ -38,10 +35,6 @@ export interface ChamadoComPrazo {
   emAberto: boolean
 }
 
-/**
- * Calcula o prazo uma vez por chamado e ordena: atrasados primeiro (mais atrasado antes), depois
- * prioridade desc e, no empate, o aberto há mais tempo.
- */
 export function prepararChamados(chamados: readonly Chamado[], agora: Date = new Date()): ChamadoComPrazo[] {
   return chamados
     .map((chamado) => ({
@@ -57,7 +50,6 @@ export function prepararChamados(chamados: readonly Chamado[], agora: Date = new
     })
 }
 
-/** "Vence em menos de 1 dia", "1 dia restante", "4 dias restantes". */
 export function textoDiasRestantes(dias: number): string {
   if (dias <= 0) return "Vence em menos de 1 dia"
   return dias === 1 ? "1 dia restante" : `${dias} dias restantes`

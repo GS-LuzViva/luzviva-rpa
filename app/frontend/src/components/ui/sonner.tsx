@@ -3,7 +3,6 @@ import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon
 
 import { useTema } from "@/hooks/use-tema"
 
-/** Avisos (toasts) no tema do app. Use `toast("Relato enviado")` de "sonner". */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { tema } = useTema()
 

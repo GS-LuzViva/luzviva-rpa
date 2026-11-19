@@ -12,7 +12,6 @@ def decidir(item, com_chamado=(), vistas=()):
     return regras.decidir_item(item, set(com_chamado), set(vistas)).acao
 
 
-# ---------------------------------------------------------------- fila
 
 def test_prioridade_no_corte_abre_chamado():
     assert decidir(item_fila(prioridade=30, situacao="insuficiente")) == "abrir"
@@ -80,7 +79,6 @@ def test_envelope_invalido(corpo):
         regras.validar_envelope(corpo)
 
 
-# ---------------------------------------------------------------- acompanhamento
 
 def _iso(delta):
     return (AGORA - delta).isoformat()

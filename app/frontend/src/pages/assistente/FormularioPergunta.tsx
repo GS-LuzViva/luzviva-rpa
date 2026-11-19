@@ -23,7 +23,6 @@ interface FormularioPerguntaProps {
 
 type Erros = { pergunta?: string; placa?: string }
 
-/** Caixa de pergunta: Enter envia, Shift+Enter quebra a linha; placa opcional. */
 export function FormularioPergunta({
   pergunta,
   aoMudarPergunta,
@@ -36,8 +35,6 @@ export function FormularioPergunta({
   const [erros, setErros] = useState<Erros>({})
   const placaOk = placaValida(placa)
 
-  // Uma pergunta enviada por fora do formulário (sugestão, "Perguntar de novo") também vale como envio:
-  // os erros do envio anterior deixam de valer.
   const [ocupadoAntes, setOcupadoAntes] = useState(ocupado)
   if (ocupado !== ocupadoAntes) {
     setOcupadoAntes(ocupado)

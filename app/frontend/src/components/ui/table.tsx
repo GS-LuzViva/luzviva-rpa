@@ -1,7 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-/** true quando o conteúdo passa da largura do contêiner (há rolagem horizontal). */
 function useRolaNaHorizontal(ref: React.RefObject<HTMLDivElement | null>): boolean {
   const [rola, setRola] = React.useState(false)
   React.useLayoutEffect(() => {
@@ -18,11 +17,6 @@ function useRolaNaHorizontal(ref: React.RefObject<HTMLDivElement | null>): boole
   return rola
 }
 
-/**
- * Tabela dentro de um contêiner que rola na horizontal. `rotulo` dá nome à região (`role="region"`),
- * para o leitor de tela e para quem chega nela pelo Tab: quando a tabela não cabe, o contêiner entra na
- * ordem do Tab (as setas rolam) com anel de foco visível.
- */
 function Table({ className, rotulo, ...props }: React.ComponentProps<"table"> & { rotulo?: string }) {
   const caixa = React.useRef<HTMLDivElement>(null)
   const rola = useRolaNaHorizontal(caixa)

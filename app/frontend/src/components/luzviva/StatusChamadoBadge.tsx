@@ -21,7 +21,6 @@ export interface StatusChamadoBadgeProps {
   className?: string
 }
 
-/** Status do chamado (aberto, em atendimento, concluído, cancelado) com ícone + texto. */
 export function StatusChamadoBadge({ status, size = "md", className }: StatusChamadoBadgeProps) {
   const estilo = ESTILO_STATUS[status] ?? ESTILO_STATUS.aberto
   const Icone = estilo.icone
@@ -34,13 +33,11 @@ export function StatusChamadoBadge({ status, size = "md", className }: StatusCha
 }
 
 export interface AtrasoBadgeProps {
-  /** Dias inteiros de atraso (de `calcularPrazo(...).diasAtraso`). */
   diasAtraso: number
   size?: "sm" | "md"
   className?: string
 }
 
-/** "Atrasado há N dias" em vermelho, com ícone. Mostre só quando `calcularPrazo(...).atrasado`. */
 export function AtrasoBadge({ diasAtraso, size = "md", className }: AtrasoBadgeProps) {
   return (
     <span className={cn(BASE, TAMANHO[size], "bg-apagada-fundo text-apagada", className)}>
